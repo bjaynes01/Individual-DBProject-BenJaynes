@@ -1,0 +1,41 @@
+html
+    head
+        title New Product
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col 
+                    a(href="/AdminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 New Product
+        form(method="post" )
+            .row
+                .col-2
+                    label Item Count:
+                .col-2
+                    input(type="text" name="count") 
+            .row
+                .col-2
+                    label Item Price:
+                .col-2
+                    input(type="text" name="price") 
+            .row
+                .col-2
+                    label Item Name:
+                .col-2
+                    input(type="text" name="name") 
+            .row
+                .col-2
+                    label Item Type:
+                .col-2
+                    input(type="text" name="type") 
+            .row
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/addProductAction") Submit
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back

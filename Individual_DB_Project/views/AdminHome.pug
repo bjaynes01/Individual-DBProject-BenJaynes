@@ -1,0 +1,26 @@
+html
+    head
+        title Admin Home
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col
+                    a(href="/Logout") Logout
+        .row
+            .col
+                h3 Admin Home:
+        .row
+            .col
+                button(type="Employees" class="btn btn-primary" onclick="window.location.href='/ManageEmployees'") Employees Management
+            .col
+                button(type="Customers" class="btn btn-primary" onclick="window.location.href='/ManageCustomers'") Customers Management
+            .col
+                button(type="Products" class="btn btn-primary" onclick="window.location.href='/ManageProducts'") Products Management
+            .col
+                button(type="CageTime" class="btn btn-primary" onclick="window.location.href='/Manage_Steam_Orders'") Glove Steamer Management
+            .col
+                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/ViewSales'") Sales List

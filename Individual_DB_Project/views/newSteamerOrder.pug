@@ -1,0 +1,37 @@
+html
+    head
+        title New Steam Order
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col 
+                    a(href="/AdminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 New Steam Order
+        form(method="post" )
+            .row
+                .col-2
+                    label Customer ID:
+                .col-2
+                    input(type="text" name="CusID") 
+            .row
+                .col-2
+                    label Employee ID:
+                .col-2
+                    input(type="text" name="EmpID") 
+            .row
+                .col-2
+                    label Price:
+                .col-2
+                    input(type="text" name="price") 
+            .row
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/addSteamerOrderAction") Submit
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back
+            

@@ -1,0 +1,41 @@
+html
+    head
+        title New Customer
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col 
+                    a(href="/AdminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 New Customer
+        form(method="post" )
+            .row
+                .col-2
+                    label First Name:
+                .col-2
+                    input(type="text" name="Fname") 
+            .row
+                .col-2
+                    label Last Name: 
+                .col-2
+                    input(type="text" name="Lname") 
+            .row
+                .col-2
+                    label Gender:
+                .col-2
+                    input(type="text" name="Gender") 
+            .row
+                .col-2 
+                    label Email:
+                .col-2
+                    input(type="text" name="email") 
+            .row
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/addCustomerAction") Submit
+                .col
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back

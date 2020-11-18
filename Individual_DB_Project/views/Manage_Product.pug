@@ -1,0 +1,53 @@
+html
+    head
+        title Admin
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col
+                    a(href="/adminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 Admin Page:
+        .row
+            .col
+                Label Products:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th Item ID
+                        th Product Name
+                        th Type
+                        th Stock
+                        th Price
+                    for product in products
+                        tr
+                            td #{product.product_ID}
+                            td #{product.P_name}
+                            td #{product.type}
+                            td #{product.stock}
+                            td #{product.price}
+
+        form(method="post" name="Products")
+            .row
+                .col
+                    label Select Product ID:
+            .row
+                .col
+                    select(name='dropDown', id='item')
+                        for product in products
+                            option(name="select" value=product.product_ID ) #{product.product_ID}
+            .row
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/addProduct'") Add Product
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/deleteProduct") Delete Product
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/updateProduct") Update Product
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/adminPage'") Back

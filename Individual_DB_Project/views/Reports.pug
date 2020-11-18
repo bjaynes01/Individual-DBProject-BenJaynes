@@ -1,0 +1,29 @@
+html
+    head
+        title Reports
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/adminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        .row
+            .col
+                h3 Reports:
+        .row
+            .col
+                button(type="Employees" class="btn btn-primary" onclick="window.location.href='/viewEmployees'") Employees List
+            .col
+                button(type="Customers" class="btn btn-primary" onclick="window.location.href='/viewCustomers'") Customers List
+            .col
+                button(type="Products" class="btn btn-primary" onclick="window.location.href='/viewProducts'") Products List
+        .row
+            .col
+                button(type="CageTime" class="btn btn-primary" onclick="window.location.href='/ViewCageTimesByCustomer'") Cage Time List by Customer ID
+            .col
+                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewSales'") Sales List
+            .col
+                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewSalesToCustomer'") Customer Purchases

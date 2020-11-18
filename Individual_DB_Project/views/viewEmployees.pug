@@ -1,0 +1,36 @@
+html
+    head
+        title Employees List
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col
+                    a(href="/adminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 Employee List Report:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th First Name
+                        th Last Name
+                        th Gender
+                        th Email
+                        th Salary
+                        th Employee ID
+                    for emp in employees
+                        tr
+                            td #{emp.First_Name}
+                            td #{emp.Last_Name}
+                            td #{emp.Gender}
+                            td #{emp.Email}
+                            td #{emp.Salary}
+                            td #{emp.Emp_ID}
+        .row
+            .col-2
+                button(type="button" class="btn btn-primary" onclick="history.back()") Back

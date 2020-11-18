@@ -1,0 +1,41 @@
+html
+    head
+        title Customer
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .row
+            .col
+                a(href="/Logout") Logout
+        .row
+            .col
+                h3 Customer User Page
+        .row
+            .col
+                Label Products:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th Item Count
+                        th Item Name
+                        th Item Price
+                        th Item ID
+                        th Price
+                    for product in products
+                        tr
+                            td #{product.product_ID}
+                            td #{product.P_name}
+                            td #{product.type}
+                            td #{product.stock}
+                            td #{product.price}
+        form(method="post")
+            .row   
+                .col-2
+                    button(type="submit" class="btn btn-primary" value="CustomerID" formaction="/addOrder") Order
+                .col-2
+                    button(type="submit" class="btn btn-primary" value="CustomerID" formaction="/updateCustomer") Update profile Info
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/addSteamerOrder'") Add Glove Steamer Order
+                .col-2
+                    button(type="button" class="btn btn-primary" value="CustomerID" formaction="/viewCustomerPurchases") View Prior Purchases

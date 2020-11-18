@@ -1,0 +1,22 @@
+html
+    head
+        title Login
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style2.css")
+    body
+        h3 Login
+    form(action='post-test', method='post')
+        .row
+            .col-2
+                label(for='user') Username:
+            .col-2
+                input(type="text" name='user')
+        .row
+            .col-2
+                label(for='pass') Password:
+            .col-2
+                input(type="text" name='pass')
+        .row
+            .col-md-4
+                button(type="submit" class="btn btn-primary") Submit
+        

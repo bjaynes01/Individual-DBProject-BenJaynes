@@ -1,0 +1,53 @@
+html
+    head
+        title Admin
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col
+                    a(href="/adminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 Admin Page:
+        .row
+            .col
+                Label Customers:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th First Name
+                        th Last Name
+                        th Gender
+                        th Email
+                        th Customer ID
+                    for customer in customers   
+                        tr
+                            td #{customer.First_Name}
+                            td #{customer.Last_Name}
+                            td #{customer.Gender}
+                            td #{customer.Email}
+                            td #{customer.Cus_ID}
+
+        form(method="post" name="Customer")
+            .row
+                .col
+                    label Select Customer ID:
+            .row
+                .col
+                    select(name='dropDown', id='item')
+                        for customer in customers
+                            option(name="select" value=customer.Cus_ID ) #{customer.Cus_ID}
+            .row
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/addCustomer'") Add Customer
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/deleteCustomer") Delete Customer
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/updateCustomer") Update Customer
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/adminPage'") Back

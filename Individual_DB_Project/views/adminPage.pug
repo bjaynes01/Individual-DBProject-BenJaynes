@@ -1,0 +1,231 @@
+html
+    head
+        title Admin
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col
+                    a(href="/Logout") Logout
+        h3 Admin Page:
+        .row
+            .col
+                Label Employees:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th First Name
+                        th Last Name
+                        th Gender
+                        th Email
+                        th Salary
+                        th Employee ID
+                    for emp in employees
+                        tr
+                            td #{emp.First_Name}
+                            td #{emp.Last_Name}
+                            td #{emp.Gender}
+                            td #{emp.Email}
+                            td #{emp.Salary}
+                            td #{emp.Emp_ID}
+
+        form(method="post" name="Employee")
+            .row
+                .col
+                    label Select Employee ID
+            .row
+                .col
+                    select(name='dropDown', id='item')
+                        for emp in employees
+                            option(name="select" value=emp.Emp_ID ) #{emp.Emp_ID}
+            .row
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/addEmployee'") Add Employee
+                .col-2
+                    button(class="btn btn-primary" formaction="/deleteEmployee") Delete Employee
+                .col-2
+                    button(class="btn btn-primary" formaction="/updateEmployee") Update Employee
+        .row
+            .col
+                Label Glove Steamer Service:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th Glove Steam Order ID
+                        th Customer ID (Service Purchaser)
+                        th Customer First Name
+                        th Customer Last Name
+                        th Employee ID (Service Provider)
+                        th Cost
+                    tr
+                        td 1
+                        td 2
+                        td Brook 
+                        td Johnson
+                        td 3
+                        td $5.00
+                    tr
+                        td 2
+                        td 2
+                        td Brook 
+                        td Johnson
+                        td 1
+                        td $5.00
+                    tr
+                        td 3
+                        td 2
+                        td Brook 
+                        td Johnson
+                        td 1
+                        td $5.00
+
+        form(method="post" name="Glove")
+            .row
+                .col
+                    label Select Glove Service ID:
+            .row
+                .col
+                    select(name='dropDown', id='item')
+                        option(name="1" value="1") 1
+                        option(name="2" value="2") 2
+                        option(name="3" value="3") 3
+                        option(name="4" value="4") 4
+                        option(name="5" value="5") 5
+            .row
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/addSteamerOrder'") Add Glove Service
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/deleteSteamerOrder") Delete Glove Service
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/updateSteamerOrder") Update Glove Service
+        .row
+            .col
+                Label Customers:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th First Name
+                        th Last Name
+                        th Gender
+                        th Email
+                        th Customer ID
+                    tr
+                        td Adam
+                        td John
+                        td Male
+                        td Adam_John@Cool.com
+                        td 1
+                    tr
+                        td Adam
+                        td John
+                        td Male
+                        td Adam_John@Cool.com
+                        td 2
+                    tr
+                        td Adam
+                        td John
+                        td Male
+                        td Adam_John@Cool.com
+                        td 3
+
+        form(method="post" name="Customer")
+            .row
+                .col
+                    label Select Customer ID:
+            .row
+                .col
+                    select(name='dropDown', id='item')
+                        option(name="1" value="1") 1
+                        option(name="2" value="2") 2
+                        option(name="3" value="3") 3
+                        option(name="4" value="4") 4
+                        option(name="5" value="5") 5
+            .row
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/addCustomer'") Add Customer
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/deleteCustomer") Delete Customer
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/updateCustomer") Update Customer
+        .row
+            .col
+                Label Products:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th Item Count
+                        th Item Name
+                        th Item Price
+                        th Item ID
+                    tr
+                        td 5
+                        td Rawlings 1stBase Mitt
+                        td $25.00
+                        td 1
+                    tr
+                        td 5
+                        td Rawlings Trapeze Outfield 
+                        td $35.00
+                        td 2
+                    tr
+                        td 5
+                        td Rawlings Trapeze Utility Glove
+                        td $45.00
+                        td 3
+
+        form(method="post" name="Products")
+            .row
+                .col
+                    label Select Product ID:
+            .row
+                .col
+                    select(name='dropDown', id='item')
+                        option(name="1" value="1") 1
+                        option(name="2" value="2") 2
+                        option(name="3" value="3") 3
+                        option(name="4" value="4") 4
+                        option(name="5" value="5") 5
+            .row
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/addProduct'") Add Product
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/deleteProduct") Delete Product
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/updateProduct") Update Product
+        .row
+            .col-2
+                Label Recent Sales:
+        .row 
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th Item Count
+                        th Item Name
+                        th Item Price
+                        th Item ID
+                        th Customer ID
+                    tr
+                        td 5
+                        td Rawlings 1stBase Mitt
+                        td $25.00
+                        td 1
+                        td 2
+                    tr
+                        td 5
+                        td Rawlings Trapeze Outfield 
+                        td $35.00
+                        td 2
+                        td 2
+                    tr
+                        td 5
+                        td Rawlings Trapeze Utility Glove
+                        td $45.00
+                        td 3
+                        td 4

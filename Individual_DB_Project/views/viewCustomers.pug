@@ -1,0 +1,35 @@
+html
+    head
+        title Customer List
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col
+                    a(href="/adminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 Customer List Report:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th First Name
+                        th Last Name
+                        th Gender
+                        th Email
+                        th Customer ID
+                    for customer in customers   
+                        tr
+                            td #{customer.First_Name}
+                            td #{customer.Last_Name}
+                            td #{customer.Gender}
+                            td #{customer.Email}
+                            td #{customer.Cus_ID}
+        .row   
+            .col
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back
+    

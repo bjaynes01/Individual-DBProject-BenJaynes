@@ -1,0 +1,47 @@
+html
+    head
+        title New Employee
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col 
+                    a(href="/AdminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 Add A New Employee:
+
+        form(method="post" name="newEmployee")
+            .row
+                .col-2
+                    label First Name:
+                .col-2
+                    input(type="text" id="fname" name="fname") 
+            .row
+                .col-2
+                    label Last Name: 
+                .col-2
+                    input(type="text" id="Lname" name="Lname")  
+            .row
+                .col-2
+                    label Gender:
+                .col-2
+                    input(type="text" id="Gender" name="Gender") 
+            .row
+                .col-2 
+                    label Email:
+                .col-2
+                    input(type="text" id="email" name="email") 
+            .row
+                .col-2 
+                    label Salary:
+                .col-2
+                    input(type="text" id="salary" name="salary") 
+            .row
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/addEmployeeAction") Submit
+                .col
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back
