@@ -135,10 +135,6 @@ app.post('/deleteSteamerOrder', (req, res) =>{
     res.redirect('/Manage_Steam_Orders');
 });
 
-app.get('/Home', (req, res) => {
-    res.render('HomePage');
-});
-
 app.get('/Login', (req, res) => {
     res.render('Login');
 });
