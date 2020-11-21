@@ -34,6 +34,12 @@ html
                     label Email:
                 .col-2
                     input(type="text" name="email", value=data[0].Email) 
+
+            .row
+                .col-2 
+                    label Password:
+                .col-2
+                    input(type="text" name="pass", value=data[0].Password) 
             .row
                 .col-2
                     button(name="ID" type="submit" class="btn btn-primary" formaction="/updateCustomerAction" value=data[0].Cus_ID) Submit

@@ -216,7 +216,7 @@ app.post('/updateCustomer', (req, res) => {
 
 app.post('/updateCustomerAction', (req, res) => {
     console.log('Got body:', req.body);
-    var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
+    var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "', `Password` = '" + req.body.pass + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
     con.query(str);
     res.redirect('/ManageCustomers');
 });
