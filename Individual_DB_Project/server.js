@@ -17,18 +17,36 @@ const con = mysql.createConnection({
 con.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
-    con.query('SELECT * FROM products', (err,rows) => {
-        if(err) throw err;
-      
-        console.log('Data received from Db:');
-        console.log(rows);
-      });
   });
 
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.get('/Customer', (req, res) =>{
+    con.query('SELECT * FROM products', (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('CustomerPage', {"products": rows});
+    });
+});
+
+app.get('/CustomerSteamerOrder', (req, res) => {
+    res.render('CustomerSteamerOrder');
+});
+
+app.post('/CustomerSteamerOrderAction', (req, res) => {
+    console.log('Got body:', req.body);
+    var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '5')";
+    console.log(str);
+    con.query(str);
+    res.redirect('/Customer');
+});
 
 app.get('/AdminPage', (req, res) =>{
     res.render('AdminHome');
@@ -90,17 +108,6 @@ app.post('/addSteamerOrderAction', (req, res) => {
     console.log(str);
     con.query(str);
     res.redirect('/Manage_Steam_Orders');
-});
-
-app.get('/Customer', (req, res) =>{
-    con.query('SELECT * FROM products', (err,rows) => {
-        if(err) throw err;
-      
-        console.log('Data received from Db:');
-        console.log(rows);
-
-        res.render('CustomerPage', {"products": rows});
-    });
 });
 
 app.post('/deleteCustomer', (req, res) =>{
