@@ -36,6 +36,6 @@ html
                     input(type="text" name="email", value=data[0].Email) 
             .row
                 .col-2
-                    button(type="submit" class="btn btn-primary" formaction="/updateCustomerAction") Submit
+                    button(name="ID" type="submit" class="btn btn-primary" formaction="/updateCustomerAction" value=data[0].Cus_ID) Submit
                 .col-2
                     button(type="button" class="btn btn-primary" onclick="history.back()") Back

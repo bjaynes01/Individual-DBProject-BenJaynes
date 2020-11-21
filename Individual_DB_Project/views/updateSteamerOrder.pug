@@ -23,14 +23,9 @@ html
                 .col-2
                     label Employee ID:
                 .col-2
-                    input(type="text" name="Cus_Fname" value=data[0].employee_ID) 
+                    input(type="text" name="EmpID" value=data[0].employee_ID) 
             .row
                 .col-2
-                    label Price:
-                .col-2
-                    input(type="text" name="Cus_Lname" value=data[0].price) 
-            .row
-                .col-2
-                    button(type="submit" class="btn btn-primary" formaction="/updateSteamerOrderAction") Submit
+                    button(name="ID" type="submit" class="btn btn-primary" formaction="/updateSteamerOrderAction" value=data[0].glove_steaming_ID) Submit
                 .col-2
                     button(type="button" class="btn btn-primary" onclick="history.back()") Back

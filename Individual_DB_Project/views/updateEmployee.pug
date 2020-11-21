@@ -42,6 +42,6 @@ html
             
             .row
                 .col-2
-                    button(type="submit" class="btn btn-primary" formaction="/updateEmployeeAction") Submit
+                    button(name="ID" type="submit" class="btn btn-primary" formaction="/updateEmployeeAction" value=data[0].Emp_ID) Submit
                 .col
                     button(type="button" class="btn btn-primary" onclick="history.back()") Back

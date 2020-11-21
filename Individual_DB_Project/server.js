@@ -86,7 +86,7 @@ app.get('/addSteamerOrder', (req, res) => {
 
 app.post('/addSteamerOrderAction', (req, res) => {
     console.log('Got body:', req.body);
-    var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '" + req.body.price + "')";
+    var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '5')";
     console.log(str);
     con.query(str);
     res.redirect('/Manage_Steam_Orders');
@@ -209,6 +209,8 @@ app.post('/updateCustomer', (req, res) => {
 
 app.post('/updateCustomerAction', (req, res) => {
     console.log('Got body:', req.body);
+    var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
+    con.query(str);
     res.redirect('/ManageCustomers');
 });
 
@@ -226,6 +228,8 @@ app.post('/updateEmployee', (req, res) => {
 
 app.post('/updateEmployeeAction', (req, res) => {
     console.log('Got body:', req.body);
+    var str = "UPDATE `baseballstore`.`employees` SET `First_Name` = '"+ req.body.fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '"+ req.body.email +"', `Salary` = '"+ req.body.salary +"' WHERE (`Emp_ID` = '" + req.body.ID + "')";
+    con.query(str);
     res.redirect('/ManageEmployees');
 });
 
@@ -243,6 +247,8 @@ app.post('/updateProduct', (req, res) => {
 
 app.post('/updateProductAction', (req, res) => {
     console.log('Got body:', req.body);
+    var str = "UPDATE `baseballstore`.`products` SET `P_name` = '"+ req.body.name +"', `type` = '"+ req.body.type +"', `stock` = '"+ req.body.count +"', `price` = '"+ req.body.price +"' WHERE (`product_ID` = '"+ req.body.ID +"')";
+    con.query(str);
     res.redirect('/ManageProducts');
 });
 
@@ -260,7 +266,9 @@ app.post('/updateSteamerOrder', (req, res) => {
 
 app.post('/updateSteamerOrderAction', (req, res) => {
     console.log('Got body:', req.body);
-    res.render('/Manage_Steam_Orders');
+    var str = "UPDATE `baseballstore`.`glove_steaming` SET `customer_ID` = '"+ req.body.CusID +"', `employee_ID` = '" + req.body.EmpID + "', `price` = '5' WHERE (`glove_steaming_ID` = '"+ req.body.ID +"')";
+    con.query(str);
+    res.redirect('/Manage_Steam_Orders');
 });
 
 app.get('/viewCustomers', (req, res) =>{
