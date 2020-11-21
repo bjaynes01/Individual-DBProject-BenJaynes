@@ -48,6 +48,10 @@ app.post('/CustomerSteamerOrderAction', (req, res) => {
     res.redirect('/Customer');
 });
 
+
+
+
+
 app.get('/AdminPage', (req, res) =>{
     res.render('AdminHome');
 });
@@ -58,7 +62,7 @@ app.get('/addCustomer', (req, res) => {
 
 app.post('/addCustomerAction', (req, res) => {
     console.log('Got body:', req.body);
-    var str = "INSERT INTO `baseballstore`.`customers` (`First_Name`, `Last_Name`, `Gender`, `Email`) VALUES ('"+ req.body.Fname +"', '" + req.body.Lname + "', '"+ req.body.Gender +"', '" + req.body.email + "')";
+    var str = "INSERT INTO `baseballstore`.`customers` (`First_Name`, `Last_Name`, `Gender`, `Email`, `Password`) VALUES ('"+ req.body.Fname +"', '" + req.body.Lname + "', '"+ req.body.Gender +"', '" + req.body.email + "', '"+ req.body.pass +"')";
     console.log(str);
     con.query(str);
     res.redirect('/ManageCustomers');
