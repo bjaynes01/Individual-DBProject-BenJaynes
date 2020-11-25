@@ -27,6 +27,9 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+
+
+// Customer functionality Begins here...
 app.get('/Customer', (req, res) =>{
     con.query('SELECT * FROM products', (err,rows) => {
         if(err) throw err;
@@ -122,7 +125,7 @@ app.post('/viewPriorPurchases', (req, res) =>{
 
 
 
-
+// Admin functionality begins here...
 app.get('/AdminPage', (req, res) =>{
     res.render('AdminHome');
 });
