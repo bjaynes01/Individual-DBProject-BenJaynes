@@ -5,6 +5,8 @@ const bodyParser = require('body-parser')
 const mysql = require('mysql');
 const { query } = require('express');
 
+const { body, validationResult } = require('express-validator');
+
 const app = express();
 
 const con = mysql.createConnection({
