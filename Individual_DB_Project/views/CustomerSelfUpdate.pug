@@ -1,0 +1,45 @@
+html
+    head
+        title Sales Page
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Customer") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 Customer Self Update:
+        form(method="post" )
+            .row
+                .col-2
+                    label First Name:
+                .col-2
+                    input(type="text", name="Fname", value=data[0].First_Name) 
+            .row
+                .col-2
+                    label Last Name: 
+                .col-2
+                    input(type="text", name="Lname", value=data[0].Last_Name) 
+            .row
+                .col-2
+                    label Gender:
+                .col-2
+                    input(type="text" name="Gender", value=data[0].Gender) 
+            .row
+                .col-2 
+                    label Email:
+                .col-2
+                    input(type="text" name="email", value=data[0].Email) 
+
+            .row
+                .col-2 
+                    label Password:
+                .col-2
+                    input(type="text" name="pass", value=data[0].Password) 
+            .row
+                .col-2
+                    button(name="ID" type="submit" class="btn btn-primary" formaction="/selfUpdateCustomerAction" value=data[0].Cus_ID) Submit
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back

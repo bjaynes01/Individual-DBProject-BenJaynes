@@ -12,42 +12,36 @@ html
             .col 
                 table(style='width:90%', border='1')
                     tr
-                        th Item Count
+                        th Item ID
                         th Item Name
                         th Item Price
-                        th Item ID
-                    tr
-                        td 5
-                        td Rawlings 1stBase Mitt
-                        td $25.00
-                        td 1
-                    tr
-                        td 5
-                        td Rawlings Trapeze Outfield 
-                        td $35.00
-                        td 2
-                    tr
-                        td 5
-                        td Rawlings Trapeze Utility Glove
-                        td $45.00
-                        td 3
+                        th Item Count
+                        th Price
+                    for product in products
+                        tr
+                            td #{product.product_ID}
+                            td #{product.P_name}
+                            td #{product.type}
+                            td #{product.stock}
+                            td #{product.price}
         form(method="post")
             .row    
                 .col-2
                     label Product name:   
                 .col-2
-                    select(name='item')
-                        option(name="1" value="1") Rawlings First Base Mitt
+                    select(name='dropDown', id='item')
+                        for product in products
+                            option(name="select" value=product.product_ID ) #{product.P_name}
             .row
                 .col-2
                     label Amount: 
                 .col-2
                     select(name='Count', id='Count')
-                        option(name="1" value="1") 1
-                        option(name="2" value="2") 2
-                        option(name="3" value="3") 3
-                        option(name="4" value="4") 4
-                        option(name="5" value="5") 5
+                        option(name="1" value=1) 1
+                        option(name="2" value=2) 2
+                        option(name="3" value=3) 3
+                        option(name="4" value=4) 4
+                        option(name="5" value=5) 5
             .row
                 .col-2
                     button(type="submit" class="btn btn-primary" formaction="/addOrderAction") Submit

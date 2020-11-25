@@ -50,6 +50,75 @@ app.post('/CustomerSteamerOrderAction', (req, res) => {
     res.redirect('/Customer');
 });
 
+app.post('/selfUpdateCustomer', (req, res) => {
+    console.log('Got body:', req.body);
+    con.query("SELECT * FROM customers WHERE Cus_ID = '" + req.body.dropDown + "'", (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('CustomerSelfUpdate', {"data": rows});
+    });
+});
+
+app.post('/selfUpdateCustomerAction', (req, res) => {
+    console.log('Got body:', req.body);
+    var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "', `Password` = '" + req.body.pass + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
+    con.query(str);
+    res.redirect('/Customer');
+});
+
+app.post('/addOrder', (req, res) =>{
+    console.log('Got body:', req.body);
+    con.query('SELECT * FROM products', (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('newSale', {"products": rows});
+    });
+});
+
+app.post('/addOrderAction', (req, res) => {
+    console.log('Got body:', req.body);
+
+    var str;
+    var q = 'SELECT * FROM products WHERE product_ID = ' + req.body.dropDown;
+    console.log(q);
+    con.query(q, (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        var cost = rows[0].price * Number(req.body.Count);
+        console.log(rows[0].price)
+        console.log(req.body.Count)
+        str = "INSERT INTO `baseballstore`.`sales` (`Cus_ID`, `product_ID`, `amount`, `type`, `product_name`, `cost`) VALUES ('" + '2' + "', '" + req.body.dropDown + "', '" + req.body.Count + "', '" + rows[0].type + "', '" + rows[0].P_name + "', '" + cost + "')";
+        console.log(str);
+        con.query(str);
+    });
+    
+    res.redirect('/Customer');
+});
+
+app.post('/viewPriorPurchases', (req, res) =>{
+    var str = 'SELECT * FROM sales WHERE Cus_ID = ' + 2;
+    con.query(str, (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('PriorPurchase', {"sales": rows});
+    });
+});
+
+
+
+
 
 
 
@@ -80,16 +149,6 @@ app.post('/addEmployeeAction', (req, res) => {
     console.log(str);
     con.query(str);
     res.redirect('/ManageEmployees');
-});
-
-app.post('/addOrder', (req, res) =>{
-    console.log('Got body:', req.body);
-    res.render('newSale');
-});
-
-app.post('/addOrderAction', (req, res) => {
-    console.log('Got body:', req.body);
-    res.redirect('/Customer');
 });
 
 app.get('/addProduct', (req, res) => {
