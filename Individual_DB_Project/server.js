@@ -147,10 +147,6 @@ app.post('/addCustomerAction', [check('Fname').not().isEmpty().withMessage('Must
         con.query(str);
         res.redirect('/ManageCustomers');
       }
-
-    
-
-    
 });
 
 app.get('/addEmployee', (req, res) => {
