@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const mysql = require('mysql');
 const { query } = require('express');
 
-const { body, validationResult } = require('express-validator');
+const {check, validationResult} = require('express-validator');
 
 const app = express();
 
@@ -24,6 +24,7 @@ con.connect(function(err) {
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
@@ -134,12 +135,22 @@ app.get('/addCustomer', (req, res) => {
     res.render('newCustomer');
 });
 
-app.post('/addCustomerAction', (req, res) => {
+app.post('/addCustomerAction', [check('Fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters")] , (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "INSERT INTO `baseballstore`.`customers` (`First_Name`, `Last_Name`, `Gender`, `Email`, `Password`) VALUES ('"+ req.body.Fname +"', '" + req.body.Lname + "', '"+ req.body.Gender +"', '" + req.body.email + "', '"+ req.body.pass +"')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/ManageCustomers');
+
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+      } else {
+        var str = "INSERT INTO `baseballstore`.`customers` (`First_Name`, `Last_Name`, `Gender`, `Email`, `Password`) VALUES ('"+ req.body.Fname +"', '" + req.body.Lname + "', '"+ req.body.Gender +"', '" + req.body.email + "', '"+ req.body.pass +"')";
+        console.log(str);
+        con.query(str);
+        res.redirect('/ManageCustomers');
+      }
+
+    
+
+    
 });
 
 app.get('/addEmployee', (req, res) => {
