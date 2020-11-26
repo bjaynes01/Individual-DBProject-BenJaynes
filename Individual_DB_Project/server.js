@@ -135,7 +135,7 @@ app.get('/addCustomer', (req, res) => {
     res.render('newCustomer');
 });
 
-app.post('/addCustomerAction', [check('Fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters")] , (req, res) => {
+app.post('/addCustomerAction', [check('Fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters")] , (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
 
@@ -157,36 +157,52 @@ app.get('/addEmployee', (req, res) => {
     res.render('newEmployee');
 });
 
-app.post('/addEmployeeAction', (req, res) => {
+app.post('/addEmployeeAction', [check('fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('salary').notEmpty().isNumeric().withMessage("Must have a Salary that is a Number")], (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "INSERT INTO `employees` (`First_Name`, `Last_Name`, `Gender`, `Email`, `Salary`) VALUES (" + "'" +  req.body.fname + "', '" + req.body.Lname + "', '" + req.body.Gender + "', '" +req.body.email + "', '" + req.body.salary + "')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/ManageEmployees');
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        console.log('Got body:', req.body);
+        var str = "INSERT INTO `employees` (`First_Name`, `Last_Name`, `Gender`, `Email`, `Salary`) VALUES (" + "'" +  req.body.fname + "', '" + req.body.Lname + "', '" + req.body.Gender + "', '" +req.body.email + "', '" + req.body.salary + "')";
+        console.log(str);
+        con.query(str);
+        res.redirect('/ManageEmployees');
+    }
 });
 
 app.get('/addProduct', (req, res) => {
     res.render('newProduct');
 });
 
-app.post('/addProductAction', (req, res) => {
+app.post('/addProductAction', [check('name').notEmpty().withMessage('Must have a Product Name'), check('type').not().isEmpty().withMessage('Must have a Product Type'), check('count').notEmpty().isNumeric().withMessage('Must have a count that is numeric'), check('price').notEmpty().isNumeric().withMessage("Must have a Price that is numeric")], (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "INSERT INTO `baseballstore`.`products` (`P_name`, `type`, `stock`, `price`) VALUES ('" + req.body.name + "', '"+ req.body.type +"', '" + req.body.count + "', '" + req.body.price + "')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/ManageProducts');
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        var str = "INSERT INTO `baseballstore`.`products` (`P_name`, `type`, `stock`, `price`) VALUES ('" + req.body.name + "', '"+ req.body.type +"', '" + req.body.count + "', '" + req.body.price + "')";
+        console.log(str);
+        con.query(str);
+        res.redirect('/ManageProducts');
+    }
 });
 
 app.get('/addSteamerOrder', (req, res) => {
     res.render('newSteamerOrder');
 });
 
-app.post('/addSteamerOrderAction', (req, res) => {
+app.post('/addSteamerOrderAction', [check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID')], (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '5')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/Manage_Steam_Orders');
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '5')";
+        console.log(str);
+        con.query(str);
+        res.redirect('/Manage_Steam_Orders');
+    }
 });
 
 app.post('/deleteCustomer', (req, res) =>{
@@ -289,11 +305,16 @@ app.post('/updateCustomer', (req, res) => {
     });
 });
 
-app.post('/updateCustomerAction', (req, res) => {
+app.post('/updateCustomerAction',[check('Fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters"), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Customer')] , (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "', `Password` = '" + req.body.pass + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
-    con.query(str);
-    res.redirect('/ManageCustomers');
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "', `Password` = '" + req.body.pass + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
+        con.query(str);
+        res.redirect('/ManageCustomers');
+    }
 });
 
 app.post('/updateEmployee', (req, res) => {
@@ -308,11 +329,16 @@ app.post('/updateEmployee', (req, res) => {
     });
 });
 
-app.post('/updateEmployeeAction', (req, res) => {
+app.post('/updateEmployeeAction',[check('fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('salary').notEmpty().isNumeric().withMessage("Must have a Salary that is a Number"), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Employee')], (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "UPDATE `baseballstore`.`employees` SET `First_Name` = '"+ req.body.fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '"+ req.body.email +"', `Salary` = '"+ req.body.salary +"' WHERE (`Emp_ID` = '" + req.body.ID + "')";
-    con.query(str);
-    res.redirect('/ManageEmployees');
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        var str = "UPDATE `baseballstore`.`employees` SET `First_Name` = '"+ req.body.fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '"+ req.body.email +"', `Salary` = '"+ req.body.salary +"' WHERE (`Emp_ID` = '" + req.body.ID + "')";
+        con.query(str);
+        res.redirect('/ManageEmployees');
+    }
 });
 
 app.post('/updateProduct', (req, res) => {
@@ -327,11 +353,16 @@ app.post('/updateProduct', (req, res) => {
     });
 });
 
-app.post('/updateProductAction', (req, res) => {
+app.post('/updateProductAction', [check('name').notEmpty().withMessage('Must have a Product Name'), check('type').not().isEmpty().withMessage('Must have a Product Type'), check('count').notEmpty().isNumeric().withMessage('Must have a count that is numeric'), check('price').notEmpty().isNumeric().withMessage("Must have a Price that is numeric"), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Product')], (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "UPDATE `baseballstore`.`products` SET `P_name` = '"+ req.body.name +"', `type` = '"+ req.body.type +"', `stock` = '"+ req.body.count +"', `price` = '"+ req.body.price +"' WHERE (`product_ID` = '"+ req.body.ID +"')";
-    con.query(str);
-    res.redirect('/ManageProducts');
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        var str = "UPDATE `baseballstore`.`products` SET `P_name` = '"+ req.body.name +"', `type` = '"+ req.body.type +"', `stock` = '"+ req.body.count +"', `price` = '"+ req.body.price +"' WHERE (`product_ID` = '"+ req.body.ID +"')";
+        con.query(str);
+        res.redirect('/ManageProducts');
+    }
 });
 
 app.post('/updateSteamerOrder', (req, res) => {
@@ -346,11 +377,16 @@ app.post('/updateSteamerOrder', (req, res) => {
     });
 });
 
-app.post('/updateSteamerOrderAction', (req, res) => {
+app.post('/updateSteamerOrderAction', [check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID'), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Steamer Order')], (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "UPDATE `baseballstore`.`glove_steaming` SET `customer_ID` = '"+ req.body.CusID +"', `employee_ID` = '" + req.body.EmpID + "', `price` = '5' WHERE (`glove_steaming_ID` = '"+ req.body.ID +"')";
-    con.query(str);
-    res.redirect('/Manage_Steam_Orders');
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        var str = "UPDATE `baseballstore`.`glove_steaming` SET `customer_ID` = '"+ req.body.CusID +"', `employee_ID` = '" + req.body.EmpID + "', `price` = '5' WHERE (`glove_steaming_ID` = '"+ req.body.ID +"')";
+        con.query(str);
+        res.redirect('/Manage_Steam_Orders');
+    }
 });
 
 app.get('/viewCustomers', (req, res) =>{
