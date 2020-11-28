@@ -46,12 +46,18 @@ app.get('/CustomerSteamerOrder', (req, res) => {
     res.render('CustomerSteamerOrder');
 });
 
-app.post('/CustomerSteamerOrderAction', (req, res) => {
+app.post('/CustomerSteamerOrderAction', [check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID')], (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '5')";
-    console.log(str);
-    con.query(str);
-    res.redirect('/Customer');
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        console.log('Got body:', req.body);
+        var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '5')";
+        console.log(str);
+        con.query(str);
+        res.redirect('/Customer');
+    }
 });
 
 app.post('/selfUpdateCustomer', (req, res) => {
@@ -66,11 +72,16 @@ app.post('/selfUpdateCustomer', (req, res) => {
     });
 });
 
-app.post('/selfUpdateCustomerAction', (req, res) => {
+app.post('/selfUpdateCustomerAction',[check('Fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters"), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Customer')] , (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-    var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "', `Password` = '" + req.body.pass + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
-    con.query(str);
-    res.redirect('/Customer');
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "', `Password` = '" + req.body.pass + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
+        con.query(str);
+        res.redirect('/Customer');
+    }
 });
 
 app.post('/addOrder', (req, res) =>{
@@ -85,27 +96,31 @@ app.post('/addOrder', (req, res) =>{
     });
 });
 
-app.post('/addOrderAction', (req, res) => {
+app.post('/addOrderAction',[check('dropDown').notEmpty().isNumeric().withMessage('Must have a product_ID'), check('Count').not().isEmpty().withMessage('Must have a amount of product')] , (req, res) => {
+    const errors = validationResult(req);
     console.log('Got body:', req.body);
-
-    var str;
-    var q = 'SELECT * FROM products WHERE product_ID = ' + req.body.dropDown;
-    console.log(q);
-    con.query(q, (err,rows) => {
-        if(err) throw err;
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        var str;
+        var q = 'SELECT * FROM products WHERE product_ID = ' + req.body.dropDown;
+        console.log(q);
+        con.query(q, (err,rows) => {
+            if(err) throw err;
       
-        console.log('Data received from Db:');
-        console.log(rows);
+                console.log('Data received from Db:');
+                console.log(rows);
 
-        var cost = rows[0].price * Number(req.body.Count);
-        console.log(rows[0].price)
-        console.log(req.body.Count)
-        str = "INSERT INTO `baseballstore`.`sales` (`Cus_ID`, `product_ID`, `amount`, `type`, `product_name`, `cost`) VALUES ('" + '2' + "', '" + req.body.dropDown + "', '" + req.body.Count + "', '" + rows[0].type + "', '" + rows[0].P_name + "', '" + cost + "')";
-        console.log(str);
-        con.query(str);
-    });
+                var cost = rows[0].price * Number(req.body.Count);
+                console.log(rows[0].price)
+                console.log(req.body.Count)
+                str = "INSERT INTO `baseballstore`.`sales` (`Cus_ID`, `product_ID`, `amount`, `type`, `product_name`, `cost`) VALUES ('" + '2' + "', '" + req.body.dropDown + "', '" + req.body.Count + "', '" + rows[0].type + "', '" + rows[0].P_name + "', '" + cost + "')";
+                console.log(str);
+                con.query(str);
+            });
     
-    res.redirect('/Customer');
+        res.redirect('/Customer');
+    }
 });
 
 app.post('/viewPriorPurchases', (req, res) =>{
