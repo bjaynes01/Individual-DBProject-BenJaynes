@@ -1,13 +1,10 @@
 const express = require('express');
-
 const bodyParser = require('body-parser')
-
 const mysql = require('mysql');
 const { query } = require('express');
-
 const {check, validationResult} = require('express-validator');
+const basicAuth = require('express-basic-auth')
 
-const bcrypt = require('bcrypt');
 
 
 const app = express();
@@ -29,31 +26,30 @@ app.set('views', './views');
 app.use(express.static('public'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(basicAuth({
+    users: { 'admin': 'supersecret' },
+    challenge: true,
+    realm: 'foo',
+  }))
 
 // generate users list of Passwords, Email, and ID
 var users = [];
-users.push({
-    id: 0, 
-    name: "Admin",
-    email: "Admin@Admin",
-    password: "pass"
-});
-
 con.query('SELECT * FROM Customers', (err,rows) => {
     if(err) throw err;
     //console.log(rows);
     console.log(rows[0])
 });
 
+var current_user;
 
 
 //Login functionality is located here.
 app.get('/Login', (req, res) => {
-    console.log(users)
     res.render('Login');
 });
 
 app.get('/Logout', (req, res) => {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     res.render('Login');
 });
 
