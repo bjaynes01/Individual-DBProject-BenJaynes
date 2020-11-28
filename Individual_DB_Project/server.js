@@ -7,6 +7,9 @@ const { query } = require('express');
 
 const {check, validationResult} = require('express-validator');
 
+const bcrypt = require('bcrypt');
+
+
 const app = express();
 
 const con = mysql.createConnection({
@@ -25,7 +28,39 @@ app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// generate users list of Passwords, Email, and ID
+var users = [];
+users.push({
+    id: 0, 
+    name: "Admin",
+    email: "Admin@Admin",
+    password: "pass"
+});
+
+con.query('SELECT * FROM Customers', (err,rows) => {
+    if(err) throw err;
+    //console.log(rows);
+    console.log(rows[0])
+});
+
+
+
+//Login functionality is located here.
+app.get('/Login', (req, res) => {
+    console.log(users)
+    res.render('Login');
+});
+
+app.get('/Logout', (req, res) => {
+    res.render('Login');
+});
+
+app.post('/Login', (req, res) => {
+    res.render('Login');
+});
+
 
 
 
@@ -246,14 +281,6 @@ app.post('/deleteSteamerOrder', (req, res) =>{
     console.log(str);
     con.query(str);
     res.redirect('/Manage_Steam_Orders');
-});
-
-app.get('/Login', (req, res) => {
-    res.render('Login');
-});
-
-app.get('/Logout', (req, res) => {
-    res.render('Login');
 });
 
 app.get('/ManageCustomers', (req, res) => {
