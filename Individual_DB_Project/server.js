@@ -33,15 +33,14 @@ app.use(basicAuth({
   }))
 
 // generate users list of Passwords, Email, and ID
-var users = [];
-con.query('SELECT * FROM Customers', (err,rows) => {
-    if(err) throw err;
-    //console.log(rows);
-    console.log(rows[0])
-});
-
-var current_user;
-
+var users = [
+    {
+        id: 0,
+        Email: 'john',
+        password: 'password123admin',
+        role: 'admin'
+    }
+]
 
 //Login functionality is located here.
 app.get('/Login', (req, res) => {
@@ -49,7 +48,6 @@ app.get('/Login', (req, res) => {
 });
 
 app.get('/Logout', (req, res) => {
-    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
     res.render('Login');
 });
 
