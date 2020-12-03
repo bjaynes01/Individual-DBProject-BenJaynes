@@ -5,12 +5,15 @@ html
         link(rel="stylesheet" href="CSS/style2.css")
     body
         h3 Login
-    form(action='post-test', method='post')
+    form(action='loginAction', method='post')
         .row
             .col-2
                 label(for='user') Username:
             .col-2
                 input(type="text" name='user')
+            .col
+                if (messages.noUser)
+                    p #{messages.noUser}
         .row
             .col-2
                 label(for='pass') Password:

@@ -52,16 +52,30 @@ app.get('/Logout', (req, res) => {
     res.render('Login');
 });
 
-app.post('/Login', (req, res) => {
-    res.render('Login');
+app.post('/LoginAction', (req, res) => {
+    if(req.body.user === 'Admin' && req.body.pass === 'pass'){
+        // Login as Admin
+        res.redirect('/adminPage')
+    }else{
+        // Login as User
+        let str = "SELECT * FROM customers where 'Email'= '" + req.body.user +"' AND 'Password'= '" + req.body.pass + "'";
+        console.log('query: ', str)
+        con.query(str, (err,rows) => {
+            console.log(rows)
+            if (err){
+                req.flash('noUser', "there is not a user with those credentials")
+                res.redirect('/Login')
+            }else{
+                res.redirect(308, '/Customer')
+            }
+        })
+    }
 });
 
 
 
-
-
 // Customer functionality Begins here...
-app.get('/Customer', (req, res) =>{
+app.post('/Customer', (req, res) =>{
     con.query('SELECT * FROM products', (err,rows) => {
         if(err) throw err;
       
