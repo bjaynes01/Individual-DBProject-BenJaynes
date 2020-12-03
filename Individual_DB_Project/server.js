@@ -1,11 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const mysql = require('mysql');
+const flash = require('express-flash')
 const { query } = require('express');
 const {check, validationResult} = require('express-validator');
 const basicAuth = require('express-basic-auth')
-
-
 
 const app = express();
 
@@ -68,7 +67,10 @@ app.get('/CustomerSteamerOrder', (req, res) => {
     res.render('CustomerSteamerOrder');
 });
 
-app.post('/CustomerSteamerOrderAction', [check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID')], (req, res) => {
+app.post('/CustomerSteamerOrderAction', [
+    check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), 
+    check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID')
+], (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
@@ -94,7 +96,14 @@ app.post('/selfUpdateCustomer', (req, res) => {
     });
 });
 
-app.post('/selfUpdateCustomerAction',[check('Fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters"), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Customer')] , (req, res) => {
+app.post('/selfUpdateCustomerAction',[
+    check('Fname').not().isEmpty().withMessage('Must have a First Name'), 
+    check('Lname').not().isEmpty().withMessage('Must have a Last Name'),
+    check('email').isEmail().withMessage('Must Have an Email'),
+    check('Gender').notEmpty().withMessage('You must input a Gender'),
+    check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters"), 
+    check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Customer')
+    ] , (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
@@ -118,7 +127,10 @@ app.post('/addOrder', (req, res) =>{
     });
 });
 
-app.post('/addOrderAction',[check('dropDown').notEmpty().isNumeric().withMessage('Must have a product_ID'), check('Count').not().isEmpty().withMessage('Must have a amount of product')] , (req, res) => {
+app.post('/addOrderAction',[
+    check('dropDown').notEmpty().isNumeric().withMessage('Must have a product_ID'), 
+    check('Count').not().isEmpty().withMessage('Must have a amount of product')
+    ] , (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
@@ -172,12 +184,22 @@ app.get('/addCustomer', (req, res) => {
     res.render('newCustomer');
 });
 
-app.post('/addCustomerAction', [check('Fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters")] , (req, res) => {
+app.post('/addCustomerAction', [
+    check('Fname').not().isEmpty().withMessage('Must have a First Name'), 
+    check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
+    check('email').isEmail().withMessage('Must Have an Email'),
+    check('Gender').notEmpty().withMessage('You must input a Gender'), 
+    check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters")
+    ] , (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
 
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect('/addCustomer')
       } else {
         var str = "INSERT INTO `baseballstore`.`customers` (`First_Name`, `Last_Name`, `Gender`, `Email`, `Password`) VALUES ('"+ req.body.Fname +"', '" + req.body.Lname + "', '"+ req.body.Gender +"', '" + req.body.email + "', '"+ req.body.pass +"')";
         console.log(str);
@@ -190,7 +212,13 @@ app.get('/addEmployee', (req, res) => {
     res.render('newEmployee');
 });
 
-app.post('/addEmployeeAction', [check('fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('salary').notEmpty().isNumeric().withMessage("Must have a Salary that is a Number")], (req, res) => {
+app.post('/addEmployeeAction', [
+    check('fname').not().isEmpty().withMessage('Must have a First Name'), 
+    check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
+    check('email').isEmail().withMessage('Must Have an Email'), 
+    check('Gender').notEmpty().withMessage('You must input a Gender'), 
+    check('salary').notEmpty().isNumeric().withMessage("Must have a Salary that is a Number")
+], (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
@@ -208,7 +236,12 @@ app.get('/addProduct', (req, res) => {
     res.render('newProduct');
 });
 
-app.post('/addProductAction', [check('name').notEmpty().withMessage('Must have a Product Name'), check('type').not().isEmpty().withMessage('Must have a Product Type'), check('count').notEmpty().isNumeric().withMessage('Must have a count that is numeric'), check('price').notEmpty().isNumeric().withMessage("Must have a Price that is numeric")], (req, res) => {
+app.post('/addProductAction', [
+    check('name').notEmpty().withMessage('Must have a Product Name'), 
+    check('type').not().isEmpty().withMessage('Must have a Product Type'), 
+    check('count').notEmpty().isNumeric().withMessage('Must have a count that is numeric'), 
+    check('price').notEmpty().isNumeric().withMessage("Must have a Price that is numeric")
+], (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
@@ -225,7 +258,10 @@ app.get('/addSteamerOrder', (req, res) => {
     res.render('newSteamerOrder');
 });
 
-app.post('/addSteamerOrderAction', [check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID')], (req, res) => {
+app.post('/addSteamerOrderAction', [
+    check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), 
+    check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID')
+    ], (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
@@ -330,7 +366,14 @@ app.post('/updateCustomer', (req, res) => {
     });
 });
 
-app.post('/updateCustomerAction',[check('Fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters"), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Customer')] , (req, res) => {
+app.post('/updateCustomerAction',[
+    check('Fname').not().isEmpty().withMessage('Must have a First Name'), 
+    check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
+    check('email').isEmail().withMessage('Must Have an Email'), 
+    check('Gender').notEmpty().withMessage('You must input a Gender'), 
+    check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters"), 
+    check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Customer')
+    ] , (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
@@ -354,7 +397,14 @@ app.post('/updateEmployee', (req, res) => {
     });
 });
 
-app.post('/updateEmployeeAction',[check('fname').not().isEmpty().withMessage('Must have a First Name'), check('Lname').not().isEmpty().withMessage('Must have a Last Name'), check('email').isEmail().withMessage('Must Have an Email'), check('Gender').notEmpty().withMessage('You must input a Gender'), check('salary').notEmpty().isNumeric().withMessage("Must have a Salary that is a Number"), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Employee')], (req, res) => {
+app.post('/updateEmployeeAction',[
+    check('fname').not().isEmpty().withMessage('Must have a First Name'), 
+    check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
+    check('email').isEmail().withMessage('Must Have an Email'), 
+    check('Gender').notEmpty().withMessage('You must input a Gender'), 
+    check('salary').notEmpty().isNumeric().withMessage("Must have a Salary that is a Number"), 
+    check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Employee')
+    ], (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
@@ -378,7 +428,12 @@ app.post('/updateProduct', (req, res) => {
     });
 });
 
-app.post('/updateProductAction', [check('name').notEmpty().withMessage('Must have a Product Name'), check('type').not().isEmpty().withMessage('Must have a Product Type'), check('count').notEmpty().isNumeric().withMessage('Must have a count that is numeric'), check('price').notEmpty().isNumeric().withMessage("Must have a Price that is numeric"), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Product')], (req, res) => {
+app.post('/updateProductAction', [
+    check('name').notEmpty().withMessage('Must have a Product Name'),
+    check('type').not().isEmpty().withMessage('Must have a Product Type'),
+    check('count').notEmpty().isNumeric().withMessage('Must have a count that is numeric'),
+    check('price').notEmpty().isNumeric().withMessage("Must have a Price that is numeric"), 
+    check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Product')], (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
@@ -402,7 +457,11 @@ app.post('/updateSteamerOrder', (req, res) => {
     });
 });
 
-app.post('/updateSteamerOrderAction', [check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID'), check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Steamer Order')], (req, res) => {
+app.post('/updateSteamerOrderAction', [
+    check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), 
+    check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID'), 
+    check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Steamer Order')
+    ], (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
