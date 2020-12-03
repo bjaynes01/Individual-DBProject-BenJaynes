@@ -33,14 +33,7 @@ app.use(basicAuth({
   }))
 
 // generate users list of Passwords, Email, and ID
-var users = [
-    {
-        id: 0,
-        Email: 'john',
-        password: 'password123admin',
-        role: 'admin'
-    }
-]
+
 
 //Login functionality is located here.
 app.get('/Login', (req, res) => {
