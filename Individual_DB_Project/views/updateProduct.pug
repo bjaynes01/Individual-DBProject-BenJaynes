@@ -19,21 +19,33 @@ html
                     label Item Count:
                 .col-2
                     input(type="text" name="count" value=data[0].stock) 
+                .col
+                    if(messages.count)
+                        p #{messages.count}
             .row
                 .col-2
                     label Item Price:
                 .col-2
                     input(type="text" name="price" value=data[0].price) 
+                .col 
+                    if(messages.price)
+                        p #{messages.price}
             .row
                 .col-2
                     label Item Name:
                 .col-2
                     input(type="text" name="name" value=data[0].P_name) 
+                .col 
+                    if(messages.name)
+                        p #{messages.name}
             .row
                 .col-2
                     label Item Type:
                 .col-2
                     input(type="text" name="type" value=data[0].type) 
+                .col 
+                    if(messages.type)
+                        p #{messages.type}
             .row
                 .col-2
                     button(name="ID" type="submit" class="btn btn-primary" formaction="/updateProductAction" value=data[0].product_ID) Submit

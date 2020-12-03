@@ -19,11 +19,17 @@ html
                     label Customer ID:
                 .col-2
                     input(type="text" name="CusID") 
+                .col
+                    if(messages.CusID)
+                        p #{messages.CusID}
             .row
                 .col-2
                     label Employee ID:
                 .col-2
                     input(type="text" name="EmpID") 
+                .col
+                    if(messages.EmpID)
+                        p #{messages.EmpID}
             .row
                 .col-2
                     button(type="submit" class="btn btn-primary" formaction="/addSteamerOrderAction") Submit

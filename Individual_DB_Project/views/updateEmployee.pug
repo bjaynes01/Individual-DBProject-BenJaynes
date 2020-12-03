@@ -19,26 +19,41 @@ html
                     label First Name:
                 .col-2
                     input(type="text" name="fname" value=data[0].First_Name) 
+                .col
+                    if(messages.fname)
+                        p #{messages.fname}
             .row
                 .col-2
                     label Last Name: 
                 .col-2
                     input(type="text" name="Lname" value=data[0].Last_Name) 
+                .col
+                    if(messages.Lname)
+                        p #{messages.Lname}
             .row
                 .col-2
                     label Gender:
                 .col-2
                     input(type="text" name="Gender" value=data[0].Gender) 
+                .col
+                    if(messages.Gender)
+                        p #{messages.Gender}
             .row
                 .col-2 
                     label Email:
                 .col-2
                     input(type="text" name="email" value=data[0].Email) 
+                .col
+                    if(messages.email)
+                        p #{messages.email}
             .row
                 .col-2 
                     label Salary:
                 .col-2
                     input(type="text" name="salary" value=data[0].Salary) 
+                .col
+                    if(messages.salary)
+                        p #{messages.salary}
             
             .row
                 .col-2

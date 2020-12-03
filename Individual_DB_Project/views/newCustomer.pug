@@ -19,26 +19,41 @@ html
                     label First Name:
                 .col-2
                     input(type="text" name="Fname") 
+                .col
+                    if(messages.Fname)
+                        p #{messages.Fname}
             .row
                 .col-2
                     label Last Name: 
                 .col-2
                     input(type="text" name="Lname") 
+                .col
+                    if(messages.Lname)
+                        p #{messages.Lname}
             .row
                 .col-2
                     label Gender:
                 .col-2
                     input(type="text" name="Gender") 
+                .col
+                    if(messages.Gender)
+                        p #{messages.Gender}
             .row
                 .col-2 
                     label Email:
                 .col-2
                     input(type="text" name="email") 
+                .col
+                    if(messages.email)
+                        p #{messages.email}
             .row
                 .col-2 
                     label Password:
                 .col-2
                     input(type="text" name="pass") 
+                .col
+                    if(messages.pass)
+                        p #{messages.pass}
             .row
                 .col-2
                     button(type="submit" class="btn btn-primary" formaction="/addCustomerAction") Submit

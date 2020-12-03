@@ -1,8 +1,11 @@
+if (process.env.NODE_ENV !== 'production'){
+    require('dotenv').config()
+}
 const express = require('express');
 const bodyParser = require('body-parser')
 const mysql = require('mysql');
-const flash = require('express-flash')
-const { query } = require('express');
+const flash = require('express-flash');
+const session = require('express-session');
 const {check, validationResult} = require('express-validator');
 const basicAuth = require('express-basic-auth')
 
@@ -24,7 +27,13 @@ app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(express.static('public'));
 app.use(express.json());
+app.use(flash());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}))
 app.use(basicAuth({
     users: { 'admin': 'supersecret' },
     challenge: true,
@@ -222,7 +231,11 @@ app.post('/addEmployeeAction', [
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect('/addEmployee')
     }else{
         console.log('Got body:', req.body);
         var str = "INSERT INTO `employees` (`First_Name`, `Last_Name`, `Gender`, `Email`, `Salary`) VALUES (" + "'" +  req.body.fname + "', '" + req.body.Lname + "', '" + req.body.Gender + "', '" +req.body.email + "', '" + req.body.salary + "')";
@@ -245,7 +258,11 @@ app.post('/addProductAction', [
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect('/addProduct')
     }else{
         var str = "INSERT INTO `baseballstore`.`products` (`P_name`, `type`, `stock`, `price`) VALUES ('" + req.body.name + "', '"+ req.body.type +"', '" + req.body.count + "', '" + req.body.price + "')";
         console.log(str);
@@ -265,7 +282,11 @@ app.post('/addSteamerOrderAction', [
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect('/addSteamerOrder')
     }else{
         var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '5')";
         console.log(str);
@@ -356,7 +377,13 @@ app.get('/Reports', (req, res) => {
 
 app.post('/updateCustomer', (req, res) => {
     console.log('Got body:', req.body);
-    con.query("SELECT * FROM customers WHERE Cus_ID = '" + req.body.dropDown + "'", (err,rows) => {
+    var str;
+    if(req.body.ID != null){
+        str = "SELECT * FROM customers WHERE Cus_ID = '" + req.body.ID + "'";
+    }else{
+        str = "SELECT * FROM customers WHERE Cus_ID = '" + req.body.dropDown + "'"
+    }
+    con.query(str, (err,rows) => {
         if(err) throw err;
       
         console.log('Data received from Db:');
@@ -367,17 +394,21 @@ app.post('/updateCustomer', (req, res) => {
 });
 
 app.post('/updateCustomerAction',[
-    check('Fname').not().isEmpty().withMessage('Must have a First Name'), 
-    check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
+    check('Fname').notEmpty().withMessage('Must have a First Name'), 
+    check('Lname').notEmpty().withMessage('Must have a Last Name'), 
     check('email').isEmail().withMessage('Must Have an Email'), 
     check('Gender').notEmpty().withMessage('You must input a Gender'), 
-    check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters"), 
+    check('pass').notEmpty().isNumeric().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters"), 
     check('ID').notEmpty().isNumeric().withMessage('You must have an ID to update Customer')
     ] , (req, res) => {
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect(308, '/updateCustomer')
     }else{
         var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "', `Password` = '" + req.body.pass + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
         con.query(str);
@@ -387,7 +418,13 @@ app.post('/updateCustomerAction',[
 
 app.post('/updateEmployee', (req, res) => {
     console.log('Got body:', req.body);
-    con.query("SELECT * FROM employees WHERE Emp_ID = '" + req.body.dropDown + "'", (err,rows) => {
+    var str;
+    if(req.body.ID != null){
+        str = "SELECT * FROM employees WHERE Emp_ID = '" + req.body.ID + "'";
+    }else{
+        str = "SELECT * FROM employees WHERE Emp_ID = '" + req.body.dropDown + "'";
+    }
+    con.query(str, (err,rows) => {
         if(err) throw err;
       
         console.log('Data received from Db:');
@@ -408,7 +445,11 @@ app.post('/updateEmployeeAction',[
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect(308, '/updateEmployee')
     }else{
         var str = "UPDATE `baseballstore`.`employees` SET `First_Name` = '"+ req.body.fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '"+ req.body.email +"', `Salary` = '"+ req.body.salary +"' WHERE (`Emp_ID` = '" + req.body.ID + "')";
         con.query(str);
@@ -418,7 +459,13 @@ app.post('/updateEmployeeAction',[
 
 app.post('/updateProduct', (req, res) => {
     console.log('Got body:', req.body);
-    con.query("SELECT * FROM products WHERE product_ID = '" + req.body.dropDown + "'", (err,rows) => {
+    var str;
+    if(req.body.ID != null){
+        str = "SELECT * FROM products WHERE product_ID = '"+ req.body.ID + "'";
+    }else{
+        str = "SELECT * FROM products WHERE product_ID = '"+ req.body.dropDown + "'";
+    }
+    con.query(str, (err,rows) => {
         if(err) throw err;
       
         console.log('Data received from Db:');
@@ -437,7 +484,11 @@ app.post('/updateProductAction', [
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect(308, '/updateProduct')
     }else{
         var str = "UPDATE `baseballstore`.`products` SET `P_name` = '"+ req.body.name +"', `type` = '"+ req.body.type +"', `stock` = '"+ req.body.count +"', `price` = '"+ req.body.price +"' WHERE (`product_ID` = '"+ req.body.ID +"')";
         con.query(str);
@@ -447,7 +498,13 @@ app.post('/updateProductAction', [
 
 app.post('/updateSteamerOrder', (req, res) => {
     console.log('Got body:', req.body);
-    con.query("SELECT * FROM glove_steaming WHERE glove_steaming_ID = '" + req.body.dropDown + "'", (err,rows) => {
+    var str;
+    if(req.body.ID != null){
+        str = "SELECT * FROM glove_steaming WHERE glove_steaming_ID = '"+ req.body.ID + "'";
+    }else{
+        str = "SELECT * FROM glove_steaming WHERE glove_steaming_ID = '"+ req.body.dropDown + "'";
+    }
+    con.query(str, (err,rows) => {
         if(err) throw err;
       
         console.log('Data received from Db:');
@@ -465,7 +522,11 @@ app.post('/updateSteamerOrderAction', [
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect(308, '/updateSteamerOrder')
     }else{
         var str = "UPDATE `baseballstore`.`glove_steaming` SET `customer_ID` = '"+ req.body.CusID +"', `employee_ID` = '" + req.body.EmpID + "', `price` = '5' WHERE (`glove_steaming_ID` = '"+ req.body.ID +"')";
         con.query(str);

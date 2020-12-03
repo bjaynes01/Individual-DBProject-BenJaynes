@@ -20,26 +20,41 @@ html
                     label First Name:
                 .col-2
                     input(type="text" id="fname" name="fname") 
+                .col
+                    if(messages.fname)
+                        p #{messages.fname}
             .row
                 .col-2
                     label Last Name: 
                 .col-2
                     input(type="text" id="Lname" name="Lname")  
+                .col
+                    if(messages.Lname)
+                        p #{messages.Lname}
             .row
                 .col-2
                     label Gender:
                 .col-2
                     input(type="text" id="Gender" name="Gender") 
+                .col
+                    if(messages.Gender)
+                        p #{messages.Gender}
             .row
                 .col-2 
                     label Email:
                 .col-2
                     input(type="text" id="email" name="email") 
+                .col
+                    if(messages.email)
+                        p #{messages.email}
             .row
                 .col-2 
                     label Salary:
                 .col-2
                     input(type="text" id="salary" name="salary") 
+                .col
+                    if(messages.salary)
+                        p #{messages.salary}
             .row
                 .col-2
                     button(type="submit" class="btn btn-primary" formaction="/addEmployeeAction") Submit
