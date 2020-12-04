@@ -9,34 +9,15 @@ html
                 a(href="/Logout") Logout
         .row
             .col
-                h3 Customer User Page
-        .row
-            .col
-                Label Products:
-        .row
-            .col 
-                table(style='width:90%', border='1')
-                    tr
-                        th Item ID
-                        th Item Name
-                        th Item Price
-                        th Item Count
-                        th Price
-                    for product in products
-                        tr
-                            td #{product.product_ID}
-                            td #{product.P_name}
-                            td #{product.type}
-                            td #{product.stock}
-                            td $#{product.price}
+                h3 Customer User Page #{ID}
         form(method="post")
             .row   
                 .col-2
                     //this will be implemented to work with user ID
-                    button(name="dropDown" type="submit" class="btn btn-primary" value=3 formaction="/addOrder") Order
+                    button(name="dropDown" type="submit" class="btn btn-primary" value=ID formaction="/addOrder") Order
                 .col-2
-                    button(name="dropDown" type="submit" class="btn btn-primary" value=3 formaction="/selfUpdateCustomer") Update profile Info
+                    button(name="dropDown" type="submit" class="btn btn-primary" value=ID formaction="/selfUpdateCustomer") Update profile Info
                 .col-2
                     button(type="button" class="btn btn-primary" onclick="window.location.href='/CustomerSteamerOrder'") Add Glove Steamer Order
                 .col-2
-                    button(name="dropDown" type="submit" class="btn btn-primary" value=3 formaction="/viewPriorPurchases") View Prior Purchases
+                    button(name="dropDown" type="submit" class="btn btn-primary" value=ID formaction="/viewPriorPurchases") View Prior Purchases

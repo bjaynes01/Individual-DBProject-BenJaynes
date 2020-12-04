@@ -34,11 +34,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }))
-app.use(basicAuth({
-    users: { 'admin': 'supersecret' },
-    challenge: true,
-    realm: 'foo',
-  }))
+
 
 // generate users list of Passwords, Email, and ID
 
@@ -58,7 +54,7 @@ app.post('/LoginAction', (req, res) => {
         res.redirect('/adminPage')
     }else{
         // Login as User
-        let str = "SELECT * FROM customers where 'Email'= '" + req.body.user +"' AND 'Password'= '" + req.body.pass + "'";
+        let str = "SELECT * FROM customers WHERE Email= '" + req.body.user +"' AND Password= '" + req.body.pass + "'";
         console.log('query: ', str)
         con.query(str, (err,rows) => {
             console.log(rows)
@@ -66,7 +62,8 @@ app.post('/LoginAction', (req, res) => {
                 req.flash('noUser', "there is not a user with those credentials")
                 res.redirect('/Login')
             }else{
-                res.redirect(308, '/Customer')
+                app.set('ID', rows[0].Cus_ID);
+                res.redirect('/Customer')
             }
         })
     }
@@ -75,14 +72,15 @@ app.post('/LoginAction', (req, res) => {
 
 
 // Customer functionality Begins here...
-app.post('/Customer', (req, res) =>{
+app.get('/Customer', (req, res) =>{
     con.query('SELECT * FROM products', (err,rows) => {
         if(err) throw err;
       
         console.log('Data received from Db:');
         console.log(rows);
 
-        res.render('CustomerPage', {"products": rows});
+        console.log('data', {ID : app.get('ID')})        
+        res.render('CustomerPage', {ID : app.get('ID')});
     });
 });
 
@@ -103,6 +101,7 @@ app.post('/CustomerSteamerOrderAction', [
         var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '5')";
         console.log(str);
         con.query(str);
+        app.set('ID', req.body.CusID);
         res.redirect('/Customer');
     }
 });
@@ -134,6 +133,7 @@ app.post('/selfUpdateCustomerAction',[
     }else{
         var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "', `Password` = '" + req.body.pass + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
         con.query(str);
+        app.set('ID', req.body.ID);
         res.redirect('/Customer');
     }
 });
@@ -145,7 +145,6 @@ app.post('/addOrder', (req, res) =>{
       
         console.log('Data received from Db:');
         console.log(rows);
-
         res.render('newSale', {"products": rows});
     });
 });
@@ -171,7 +170,8 @@ app.post('/addOrderAction',[
                 var cost = rows[0].price * Number(req.body.Count);
                 console.log(rows[0].price)
                 console.log(req.body.Count)
-                str = "INSERT INTO `baseballstore`.`sales` (`Cus_ID`, `product_ID`, `amount`, `type`, `product_name`, `cost`) VALUES ('" + '2' + "', '" + req.body.dropDown + "', '" + req.body.Count + "', '" + rows[0].type + "', '" + rows[0].P_name + "', '" + cost + "')";
+                str = "INSERT INTO `baseballstore`.`sales` (`Cus_ID`, `product_ID`, `amount`, `type`, `product_name`, `cost`) VALUES ('" + req.body.ID + "', '" + req.body.dropDown + "', '" + req.body.Count + "', '" + rows[0].type + "', '" + rows[0].P_name + "', '" + cost + "')";
+                app.set('ID', req.body.CusID);
                 console.log(str);
                 con.query(str);
             });
@@ -181,7 +181,7 @@ app.post('/addOrderAction',[
 });
 
 app.post('/viewPriorPurchases', (req, res) =>{
-    var str = 'SELECT * FROM sales WHERE Cus_ID = ' + 2;
+    var str = 'SELECT * FROM sales WHERE Cus_ID = ' + req.body.ID;
     con.query(str, (err,rows) => {
         if(err) throw err;
       
