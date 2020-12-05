@@ -49,6 +49,8 @@ app.get('/Logout', (req, res) => {
 });
 
 app.post('/LoginAction', (req, res) => {
+    console.log("Email", req.body.user);
+    console.log("Password", req.body.pass);
     if(req.body.user === 'Admin' && req.body.pass === 'pass'){
         // Login as Admin
         res.redirect('/adminPage')
@@ -67,6 +69,34 @@ app.post('/LoginAction', (req, res) => {
             }
         })
     }
+});
+
+app.get('/newUser', (req, res) =>{
+    res.render('NewUserLogin')
+})
+
+app.post('/newUserAction', [
+    check('Fname').not().isEmpty().withMessage('Must have a First Name'), 
+    check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
+    check('email').isEmail().withMessage('Must Have an Email'),
+    check('Gender').notEmpty().withMessage('You must input a Gender'), 
+    check('pass').notEmpty().isLength({ max:10 }).withMessage("Must Be shorter then 10 characters")
+    ] , (req, res) => {
+    const errors = validationResult(req);
+    console.log('Got body:', req.body);
+
+    if (!errors.isEmpty()) {
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect('/addCustomer')
+      } else {
+        var str = "INSERT INTO `baseballstore`.`customers` (`First_Name`, `Last_Name`, `Gender`, `Email`, `Password`) VALUES ('"+ req.body.Fname +"', '" + req.body.Lname + "', '"+ req.body.Gender +"', '" + req.body.email + "', '"+ req.body.pass +"')";
+        console.log(str);
+        con.query(str);
+        res.redirect('/Login');
+      }
 });
 
 

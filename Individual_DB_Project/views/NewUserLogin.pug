@@ -1,0 +1,61 @@
+html
+    head
+        title New Customer
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col 
+                    a(href="/AdminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 New Customer
+        form(method="post" )
+            .row
+                .col-2
+                    label First Name:
+                .col-2
+                    input(type="text" name="Fname") 
+                .col
+                    if(messages.Fname)
+                        p #{messages.Fname}
+            .row
+                .col-2
+                    label Last Name: 
+                .col-2
+                    input(type="text" name="Lname") 
+                .col
+                    if(messages.Lname)
+                        p #{messages.Lname}
+            .row
+                .col-2
+                    label Gender:
+                .col-2
+                    input(type="text" name="Gender") 
+                .col
+                    if(messages.Gender)
+                        p #{messages.Gender}
+            .row
+                .col-2 
+                    label Email:
+                .col-2
+                    input(type="text" name="email") 
+                .col
+                    if(messages.email)
+                        p #{messages.email}
+            .row
+                .col-2 
+                    label Password:
+                .col-2
+                    input(type="text" name="pass") 
+                .col
+                    if(messages.pass)
+                        p #{messages.pass}
+            .row
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/NewUserAction") Submit
+                .col
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back
