@@ -10,13 +10,8 @@ html
                     a(href="/Customer") Home
                 .col
                     a(href="/Logout") Logout
-        h3 New Steam Order
+        h3 New Steam Order #{Identity}
         form(method="post" )
-            .row
-                .col-2
-                    label Customer ID:
-                .col-2
-                    input(type="text" name="CusID") 
             .row
                 .col-2
                     label Employee ID:
@@ -24,7 +19,7 @@ html
                     input(type="text" name="EmpID") 
             .row
                 .col-2
-                    button(type="submit" class="btn btn-primary" formaction="/CustomerSteamerOrderAction") Submit
+                    button(name="CusID" type="submit" class="btn btn-primary" value=Identity formaction="/CustomerSteamerOrderAction") Submit
                 .col-2
                     button(type="button" class="btn btn-primary" onclick="history.back()") Back
             

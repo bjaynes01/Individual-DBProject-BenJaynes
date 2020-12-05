@@ -27,7 +27,7 @@ html
         form(method="post")
             .row    
                 .col-2
-                    label Product name:   
+                    label Product name:  #{Identity} 
                 .col-2
                     select(name='dropDown', id='item')
                         for product in products
@@ -44,7 +44,7 @@ html
                         option(name="5" value=5) 5
             .row
                 .col-2
-                    button(name="ID" type="submit" class="btn btn-primary" value=ID formaction="/addOrderAction") Submit
+                    button(name="ID" type="submit" class="btn btn-primary" value=Identity formaction="/addOrderAction") Submit
                 .col-2
                     button(type="button" class="btn btn-primary" onclick="history.back()") Back
             

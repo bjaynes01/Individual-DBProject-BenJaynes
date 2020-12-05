@@ -84,12 +84,12 @@ app.get('/Customer', (req, res) =>{
     });
 });
 
-app.get('/CustomerSteamerOrder', (req, res) => {
-    res.render('CustomerSteamerOrder');
+app.post('/CustomerSteamerOrder', (req, res) => {
+    console.log("ID", req.body.dropDown)
+    res.render('CustomerSteamerOrder', {"Identity": req.body.dropDown});
 });
 
 app.post('/CustomerSteamerOrderAction', [
-    check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), 
     check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID')
 ], (req, res) => {
     const errors = validationResult(req);
@@ -145,7 +145,7 @@ app.post('/addOrder', (req, res) =>{
       
         console.log('Data received from Db:');
         console.log(rows);
-        res.render('newSale', {"products": rows});
+        res.render('newSale', {"products": rows, "Identity": req.body.dropDown});
     });
 });
 
@@ -171,17 +171,17 @@ app.post('/addOrderAction',[
                 console.log(rows[0].price)
                 console.log(req.body.Count)
                 str = "INSERT INTO `baseballstore`.`sales` (`Cus_ID`, `product_ID`, `amount`, `type`, `product_name`, `cost`) VALUES ('" + req.body.ID + "', '" + req.body.dropDown + "', '" + req.body.Count + "', '" + rows[0].type + "', '" + rows[0].P_name + "', '" + cost + "')";
-                app.set('ID', req.body.CusID);
+                app.set('ID', req.body.ID);
                 console.log(str);
                 con.query(str);
+                res.redirect('/Customer');
             });
-    
-        res.redirect('/Customer');
     }
 });
 
 app.post('/viewPriorPurchases', (req, res) =>{
-    var str = 'SELECT * FROM sales WHERE Cus_ID = ' + req.body.ID;
+    var str = 'SELECT * FROM sales WHERE Cus_ID = ' + req.body.dropDown;
+    console.log("query:", str)
     con.query(str, (err,rows) => {
         if(err) throw err;
       
