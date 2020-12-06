@@ -1,0 +1,56 @@
+html
+    head
+        title New Sale
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        h3 Place Order:
+        .row
+            .col
+                Label Products:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th Item ID
+                        th Item Name
+                        th Item Price
+                        th Item Count
+                        th Price
+                    for product in products
+                        tr
+                            td #{product.product_ID}
+                            td #{product.P_name}
+                            td #{product.type}
+                            td #{product.stock}
+                            td #{product.price}
+        form(method="post")
+            .row    
+                .col-2
+                    label Product name:  #{Identity} 
+                .col-2
+                    select(name='productID', id='item')
+                        for product in products
+                            option(name="select" value=product.product_ID ) #{product.P_name}
+            .row    
+                .col-2
+                    label Customer ID:
+                .col-2
+                    select(name='CusID', id='item')
+                        for cus in customers
+                            option(name="select" value=cus.Cus_ID ) #{cus.Cus_ID}
+            .row
+                .col-2
+                    label Amount: 
+                .col-2
+                    select(name='Count', id='Count')
+                        option(name="1" value=1) 1
+                        option(name="2" value=2) 2
+                        option(name="3" value=3) 3
+                        option(name="4" value=4) 4
+                        option(name="5" value=5) 5
+            .row
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/addSaleAction") Submit
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back

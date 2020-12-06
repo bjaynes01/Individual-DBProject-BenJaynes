@@ -1,0 +1,56 @@
+html
+    head
+        title Sales Page
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col
+                    a(href="/adminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 View Sales Report:
+        .row
+            .col
+                Label Sales:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th Sale Number
+                        th Customer ID
+                        th Product ID
+                        th Amount
+                        th Product Type
+                        th Product Name
+                        th Cost
+                    for sale in sales   
+                        tr
+                            td #{sale.sales_ID}
+                            td #{sale.Cus_ID}
+                            td #{sale.product_ID}
+                            td #{sale.amount}
+                            td #{sale.type}
+                            td #{sale.product_name}
+                            td $#{sale.cost}
+        form(method="post" name="Products")
+            .row
+                .col
+                    label Select Sales ID:
+            .row
+                .col
+                    select(name='dropDown', id='item')
+                        for sale in sales
+                            option(name="select" value=sale.sales_ID ) #{sale.sales_ID}
+            .row
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="window.location.href='/addSale'") Add Sale
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/deleteSale") Cancel Sale
+                .col-2
+                    button(type="submit" class="btn btn-primary" formaction="/updateSale") Update Sale
+                .col-2
+                    button(type="button" class="btn btn-primary" onclick="history.back()") Back

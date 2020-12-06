@@ -13,10 +13,16 @@ html
         h3 New Steam Order #{Identity}
         form(method="post" )
             .row
-                .col-2
-                    label Employee ID:
-                .col-2
-                    input(type="text" name="EmpID") 
+                .col
+                    label Select Employee ID:
+            .row
+                .col
+                    select(name='EmpID', id='item')
+                        for emp in employees
+                            if(emp.Emp_ID == Identity)
+                                option(name="select" value=emp.Emp_ID selected) #{emp.Emp_ID}
+                            else
+                                option(name="select" value=emp.Emp_ID) #{emp.Emp_ID}
             .row
                 .col-2
                     button(name="CusID" type="submit" class="btn btn-primary" value=Identity formaction="/CustomerSteamerOrderAction") Submit

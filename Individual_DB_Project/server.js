@@ -60,7 +60,7 @@ app.post('/LoginAction', (req, res) => {
         console.log('query: ', str)
         con.query(str, (err,rows) => {
             console.log(rows)
-            if (err){
+            if (rows.length == 0){
                 req.flash('noUser', "there is not a user with those credentials")
                 res.redirect('/Login')
             }else{
@@ -116,7 +116,13 @@ app.get('/Customer', (req, res) =>{
 
 app.post('/CustomerSteamerOrder', (req, res) => {
     console.log("ID", req.body.dropDown)
-    res.render('CustomerSteamerOrder', {"Identity": req.body.dropDown});
+    con.query('Select Emp_ID from employees', (err,rows) =>{
+        var employees = []
+        console.log("rows: ")
+        console.log(rows)
+        employees = rows;
+        res.render('CustomerSteamerOrder', {"employees":employees, "Identity": req.body.dropDown});
+    })
 });
 
 app.post('/CustomerSteamerOrderAction', [
@@ -125,7 +131,11 @@ app.post('/CustomerSteamerOrderAction', [
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect(308, '/CustomerSteamerOrder')
     }else{
         console.log('Got body:', req.body);
         var str = "INSERT INTO `baseballstore`.`glove_steaming` (`customer_ID`, `employee_ID`, `price`) VALUES ('" + req.body.CusID + "', '" + req.body.EmpID + "', '5')";
@@ -138,7 +148,16 @@ app.post('/CustomerSteamerOrderAction', [
 
 app.post('/selfUpdateCustomer', (req, res) => {
     console.log('Got body:', req.body);
-    con.query("SELECT * FROM customers WHERE Cus_ID = '" + req.body.dropDown + "'", (err,rows) => {
+    var str = null;
+    if(req.body.ID !== undefined){
+        str = req.body.ID
+        console.log("ID", req.body.ID)
+    }else{
+        console.log("dropDown", req.body.dropDown)
+        str = req.body.dropDown
+    }
+    console.log("query", "SELECT * FROM customers WHERE Cus_ID = '" + str + "'")
+    con.query("SELECT * FROM customers WHERE Cus_ID = '" + str + "'", (err,rows) => {
         if(err) throw err;
       
         console.log('Data received from Db:');
@@ -159,7 +178,11 @@ app.post('/selfUpdateCustomerAction',[
     const errors = validationResult(req);
     console.log('Got body:', req.body);
     if (!errors.isEmpty()) {
-        return res.status(422).jsonp(errors.array());
+        for(let i = 0;i < errors.array().length;i++){
+            console.log("test: ", "param: " + errors.array()[i].param + "msg: " + errors.array()[i].msg)
+            req.flash(errors.array()[i].param, errors.array()[i].msg)
+        }
+        res.redirect(308, '/selfUpdateCustomer')
     }else{
         var str = "UPDATE `baseballstore`.`customers` SET `First_Name` = '"+ req.body.Fname +"', `Last_Name` = '"+ req.body.Lname +"', `Gender` = '"+ req.body.Gender +"', `Email` = '" + req.body.email + "', `Password` = '" + req.body.pass + "' WHERE (`Cus_ID` = '" + req.body.ID + "')";
         con.query(str);
@@ -295,7 +318,7 @@ app.get('/addProduct', (req, res) => {
 
 app.post('/addProductAction', [
     check('name').notEmpty().withMessage('Must have a Product Name'), 
-    check('type').not().isEmpty().withMessage('Must have a Product Type'), 
+    check('type').notEmpty().not().isNumeric().withMessage('Must have a Product Type that is not numeric'), 
     check('count').notEmpty().isNumeric().withMessage('Must have a count that is numeric'), 
     check('price').notEmpty().isNumeric().withMessage("Must have a Price that is numeric")
 ], (req, res) => {
@@ -315,8 +338,69 @@ app.post('/addProductAction', [
     }
 });
 
+app.get('/addSale', (req, res) =>{
+    console.log('Got body:', req.body);
+    con.query('SELECT * FROM products', (err,rows) => {
+        if(err) throw err;
+        var products = rows;
+        console.log('Data received from Db:');
+        console.log(rows);
+        con.query('SELECT Cus_ID FROM customers', (err,rows) => {
+            if(err) throw err;
+            var customers = rows;
+            console.log('Data received from Db:');
+            console.log(rows);
+            res.render('newAdminSale', {"products": products, "customers": customers, "Identity": req.body.dropDown});
+        });
+    });
+});
+
+
+app.post('/addSaleAction',[
+    check('productID').notEmpty().isNumeric().withMessage('Must have a Product ID'), 
+    check('CusID').notEmpty().isNumeric().withMessage('Must have a Customer ID'), 
+    check('Count').not().isEmpty().withMessage('Must have a amount of product')
+    ] , (req, res) => {
+    const errors = validationResult(req);
+    console.log('Got body:', req.body);
+    if (!errors.isEmpty()) {
+        return res.status(422).jsonp(errors.array());
+    }else{
+        var str;
+        var q = 'SELECT * FROM products WHERE product_ID = ' + req.body.productID;
+        console.log(q);
+        con.query(q, (err,rows) => {
+            if(err) throw err;
+      
+                console.log('Data received from Db:');
+                console.log(rows);
+
+                var cost = rows[0].price * Number(req.body.Count);
+                console.log(rows[0].price)
+                console.log(req.body.Count)
+                str = "INSERT INTO `baseballstore`.`sales` (`Cus_ID`, `product_ID`, `amount`, `type`, `product_name`, `cost`) VALUES ('" + req.body.CusID + "', '" + req.body.productID + "', '" + req.body.Count + "', '" + rows[0].type + "', '" + rows[0].P_name + "', '" + cost + "')";
+                app.set('ID', req.body.ID);
+                console.log(str);
+                con.query(str);
+                res.redirect('/ManageSales');
+            });
+    }
+});
+
 app.get('/addSteamerOrder', (req, res) => {
-    res.render('newSteamerOrder');
+    con.query('Select Cus_ID from customers', (err,rows) =>{
+        var customers = []
+        console.log("rows: ")
+        console.log(rows)
+        customers = rows;
+        var employees = []
+        con.query('Select Emp_ID from employees', (err,rows) =>{
+            console.log("rows: ")
+            console.log(rows)
+            employees = rows;
+            res.render('newSteamerOrder', {"customers":customers, "employees":employees});
+        })
+    })
 });
 
 app.post('/addSteamerOrderAction', [
@@ -371,6 +455,14 @@ app.post('/deleteSteamerOrder', (req, res) =>{
     res.redirect('/Manage_Steam_Orders');
 });
 
+app.post('/deleteSale', (req, res) =>{
+    console.log('Got body:', req.body);
+    var str = "DELETE FROM `baseballstore`.`sales` WHERE (`sales_ID` = '" + req.body.dropDown + "')";
+    console.log(str);
+    con.query(str);
+    res.redirect('/Manage_Steam_Orders');
+});
+
 app.get('/ManageCustomers', (req, res) => {
     con.query('SELECT * FROM customers', (err,rows) => {
         if(err) throw err;
@@ -414,6 +506,17 @@ app.get('/Manage_Steam_Orders', (req, res) => {
         res.render('Manage_Steam_Orders', {"steams": rows});
     });
 });
+
+app.get('/ManageSales', (req, res) => {
+    con.query('SELECT * FROM sales', (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('Manage_Sales', {"sales": rows});
+    });
+})
 
 app.get('/Reports', (req, res) => {
     res.render('Reports');

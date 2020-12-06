@@ -20,8 +20,23 @@ html
                 button(type="Customers" class="btn btn-primary" onclick="window.location.href='/viewCustomers'") Customers List
             .col
                 button(type="Products" class="btn btn-primary" onclick="window.location.href='/viewProducts'") Products List
-        .row
-            .col
-                button(type="CageTime" class="btn btn-primary" onclick="window.location.href='/ViewCageTimesByCustomer'") Cage Time List by Customer ID
             .col
                 button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewSales'") Sales List
+            .col
+                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewSalesCustomer'") Sales by Customer
+        .row
+            .col
+                div
+                    p
+            .col
+                div
+                    p
+        .row
+            .col
+                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewSalesProduct'") Sales by Product
+            .col
+                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewGloveSteaming'") Steaming Order List
+            .col
+                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewGloveSteamingCustomer'") View Steaming Orders by Customer
+            .col
+                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewGloveSteamingEmployee'") View Steaming Orders by Employee

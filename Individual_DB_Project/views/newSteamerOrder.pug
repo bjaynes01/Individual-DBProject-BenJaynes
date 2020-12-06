@@ -15,18 +15,24 @@ html
         h3 New Steam Order
         form(method="post" )
             .row
-                .col-2
-                    label Customer ID:
-                .col-2
-                    input(type="text" name="CusID") 
+                .col
+                    label Select Customer ID:
+            .row
+                .col
+                    select(name='CusID', id='item') 
+                        for cus in customers
+                            option(name="select" value=cus.Cus_ID) #{cus.Cus_ID}
                 .col
                     if(messages.CusID)
                         p #{messages.CusID}
             .row
-                .col-2
-                    label Employee ID:
-                .col-2
-                    input(type="text" name="EmpID") 
+                .col
+                    label Select Employee ID:
+            .row
+                .col
+                    select(name='EmpID', id='item')
+                        for emp in employees
+                            option(name="select" value=emp.Emp_ID) #{emp.Emp_ID}
                 .col
                     if(messages.EmpID)
                         p #{messages.EmpID}
