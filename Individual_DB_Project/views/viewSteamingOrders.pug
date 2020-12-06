@@ -1,0 +1,35 @@
+html
+    head
+        title Admin
+        link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+        link(rel="stylesheet" href="CSS/style.css")
+    body
+        .container
+            .row
+                .col
+                    a(href="/Reports") Reports
+                .col
+                    a(href="/adminPage") Home
+                .col
+                    a(href="/Logout") Logout
+        h3 Admin Page:
+        .row
+            .col
+                Label Glove Steamer Service:
+        .row
+            .col 
+                table(style='width:90%', border='1')
+                    tr
+                        th Glove Steam Order ID
+                        th Customer ID (Service Purchaser)
+                        th Employee ID (Service Provider)
+                        th Cost
+                    for steam in steams
+                        tr
+                            td #{steam.glove_steaming_ID}
+                            td #{steam.customer_ID}
+                            td #{steam.employee_ID}
+                            td $#{steam.price}
+        .row
+            .col-2
+                button(type="button" class="btn btn-primary" onclick="window.location.href='/Reports'") Back

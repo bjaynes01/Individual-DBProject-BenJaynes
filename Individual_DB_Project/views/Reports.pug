@@ -23,20 +23,53 @@ html
             .col
                 button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewSales'") Sales List
             .col
-                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewSalesCustomer'") Sales by Customer
-        .row
-            .col
-                div
-                    p
-            .col
-                div
-                    p
-        .row
-            .col
-                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewSalesProduct'") Sales by Product
-            .col
-                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewGloveSteaming'") Steaming Order List
-            .col
-                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewGloveSteamingCustomer'") View Steaming Orders by Customer
-            .col
-                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewGloveSteamingEmployee'") View Steaming Orders by Employee
+                button(type="Sales" class="btn btn-primary" onclick="window.location.href='/viewSteamerOrders'") Steaming Order List
+        form(method="post")
+            .row
+                .col
+                    label Select Customer ID:
+            .row
+                .col
+                    select(name='CusID', id='item')
+                        for cus in customers
+                            option(name="select" value=cus.Cus_ID ) #{cus.Cus_ID}
+            .row
+                .col
+                    button(type="submit" class="btn btn-primary" formaction="/viewSalesCustomer") Sales by Customer
+        
+        form(method="post")
+            .row
+                .col
+                    label Select Product:
+            .row
+                .col
+                    select(name='productID', id='item')
+                        for product in products
+                            option(name="select" value=product.product_ID) #{product.product_ID}
+            .row
+                .col
+                    button(type="submit" class="btn btn-primary" formaction="/viewSalesProduct") Sales by Product
+        form(method="post")
+            .row
+                .col
+                    label Select Customer ID:
+            .row
+                .col
+                    select(name='CusID', id='item')
+                        for cus in customers
+                            option(name="select" value=cus.Cus_ID ) #{cus.Cus_ID}
+            .row
+                .col
+                    button(type="submit" class="btn btn-primary" formaction="/viewGloveSteamingCustomer") View Steaming Orders by Customer
+        form(method="post")
+            .row
+                .col
+                    label Select Employee ID:
+            .row
+                .col
+                    select(name='EmpID', id='item')
+                        for emp in employees
+                            option(name="select" value=emp.Emp_ID ) #{emp.Emp_ID}
+            .row
+                .col
+                    button(type="submit" class="btn btn-primary" formaction="/viewGloveSteamingEmployee") View Steaming Orders by Employee

@@ -460,7 +460,7 @@ app.post('/deleteSale', (req, res) =>{
     var str = "DELETE FROM `baseballstore`.`sales` WHERE (`sales_ID` = '" + req.body.dropDown + "')";
     console.log(str);
     con.query(str);
-    res.redirect('/Manage_Steam_Orders');
+    res.redirect('/ManageSales');
 });
 
 app.get('/ManageCustomers', (req, res) => {
@@ -519,7 +519,25 @@ app.get('/ManageSales', (req, res) => {
 })
 
 app.get('/Reports', (req, res) => {
-    res.render('Reports');
+    con.query('Select Cus_ID from customers', (err,rows) =>{
+        var customers = []
+        console.log("rows: ")
+        console.log(rows)
+        customers = rows;
+        var employees = []
+        con.query('Select Emp_ID from employees', (err,rows) =>{
+            console.log("rows: ")
+            console.log(rows)
+            employees = rows;
+            con.query('Select product_ID from products', (err,rows) =>{
+                var products = []
+                console.log("rows: ")
+                console.log(rows)
+                products = rows;
+                res.render('Reports', {"customers":customers, "employees":employees, "products": products});
+            })
+        })
+    })
 });
 
 app.post('/updateCustomer', (req, res) => {
@@ -681,6 +699,8 @@ app.post('/updateSteamerOrderAction', [
     }
 });
 
+
+// Report Page functionality Begins here =============================================================================================
 app.get('/viewCustomers', (req, res) =>{
     con.query('SELECT * FROM customers', (err,rows) => {
         if(err) throw err;
@@ -722,6 +742,62 @@ app.get('/viewSales', (req, res) =>{
         console.log(rows);
 
         res.render('viewSales', {"sales": rows});
+    });
+});
+
+app.post('/viewSalesProduct', (req, res) =>{
+    con.query('SELECT * FROM sales WHERE product_ID = ' + req.body.productID, (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('viewSales', {"sales": rows});
+    });
+});
+
+app.post('/viewSalesCustomer', (req, res) =>{
+    con.query('SELECT * FROM sales WHERE Cus_ID = ' + req.body.CusID, (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('viewSales', {"sales": rows});
+    });
+});
+
+
+app.get('/viewSteamerOrders', (req, res) =>{
+    con.query('SELECT * FROM glove_steaming', (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('viewSteamingOrders', {"steams": rows});
+    });
+});
+
+app.post('/viewGloveSteamingEmployee', (req, res) =>{
+    con.query('SELECT * FROM glove_steaming WHERE employee_ID = ' + req.body.EmpID, (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('viewSteamingOrders', {"steams": rows});
+    });
+});
+
+app.post('/viewGloveSteamingCustomer', (req, res) =>{
+    con.query('SELECT * FROM glove_steaming WHERE customer_ID = ' + req.body.CusID, (err,rows) => {
+        if(err) throw err;
+      
+        console.log('Data received from Db:');
+        console.log(rows);
+
+        res.render('viewSteamingOrders', {"steams": rows});
     });
 });
 
