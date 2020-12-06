@@ -36,18 +36,19 @@ app.use(session({
 }))
 
 
-// generate users list of Passwords, Email, and ID
+//Login functionality is located here. ============================================================================
 
-
-//Login functionality is located here.
+//Login Route
 app.get('/Login', (req, res) => {
     res.render('Login');
 });
 
+//Logout Route 
 app.get('/Logout', (req, res) => {
     res.render('Login');
 });
 
+//Login Action
 app.post('/LoginAction', (req, res) => {
     console.log("Email", req.body.user);
     console.log("Password", req.body.pass);
@@ -71,10 +72,12 @@ app.post('/LoginAction', (req, res) => {
     }
 });
 
+// New User route
 app.get('/newUser', (req, res) =>{
     res.render('NewUserLogin')
 })
 
+// New User Creation Action
 app.post('/newUserAction', [
     check('Fname').not().isEmpty().withMessage('Must have a First Name'), 
     check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
@@ -101,7 +104,9 @@ app.post('/newUserAction', [
 
 
 
-// Customer functionality Begins here...
+// Customer functionality Begins here ===============================================================================================
+
+// Customer Page Route
 app.get('/Customer', (req, res) =>{
     con.query('SELECT * FROM products', (err,rows) => {
         if(err) throw err;
@@ -114,6 +119,7 @@ app.get('/Customer', (req, res) =>{
     });
 });
 
+// Customer steamer order route
 app.post('/CustomerSteamerOrder', (req, res) => {
     console.log("ID", req.body.dropDown)
     con.query('Select Emp_ID from employees', (err,rows) =>{
@@ -125,6 +131,7 @@ app.post('/CustomerSteamerOrder', (req, res) => {
     })
 });
 
+// customer steamer order action route
 app.post('/CustomerSteamerOrderAction', [
     check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID')
 ], (req, res) => {
@@ -146,6 +153,7 @@ app.post('/CustomerSteamerOrderAction', [
     }
 });
 
+// customer self update route
 app.post('/selfUpdateCustomer', (req, res) => {
     console.log('Got body:', req.body);
     var str = null;
@@ -167,6 +175,7 @@ app.post('/selfUpdateCustomer', (req, res) => {
     });
 });
 
+// customer self update action route.
 app.post('/selfUpdateCustomerAction',[
     check('Fname').not().isEmpty().withMessage('Must have a First Name'), 
     check('Lname').not().isEmpty().withMessage('Must have a Last Name'),
@@ -191,6 +200,7 @@ app.post('/selfUpdateCustomerAction',[
     }
 });
 
+// add order route -> allows for customers to make orders from the store
 app.post('/addOrder', (req, res) =>{
     console.log('Got body:', req.body);
     con.query('SELECT * FROM products', (err,rows) => {
@@ -202,6 +212,7 @@ app.post('/addOrder', (req, res) =>{
     });
 });
 
+// add Order Action route -> places order for customer.
 app.post('/addOrderAction',[
     check('dropDown').notEmpty().isNumeric().withMessage('Must have a product_ID'), 
     check('Count').not().isEmpty().withMessage('Must have a amount of product')
@@ -232,6 +243,7 @@ app.post('/addOrderAction',[
     }
 });
 
+// view Prior Puchases -> allows the customer to se their prior purchases.
 app.post('/viewPriorPurchases', (req, res) =>{
     var str = 'SELECT * FROM sales WHERE Cus_ID = ' + req.body.dropDown;
     console.log("query:", str)
@@ -252,14 +264,18 @@ app.post('/viewPriorPurchases', (req, res) =>{
 
 
 // Admin functionality begins here...
+
+// Admin page route -> has all of admin privliged actions on it, the Admin home page
 app.get('/AdminPage', (req, res) =>{
     res.render('AdminHome');
 });
 
+// add Customer route -> loads the form for adding new customers
 app.get('/addCustomer', (req, res) => {
     res.render('newCustomer');
 });
 
+// add Customer action route -> adds the customer if proper input is provided redirects back to addCustomer if not.
 app.post('/addCustomerAction', [
     check('Fname').not().isEmpty().withMessage('Must have a First Name'), 
     check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
@@ -284,10 +300,12 @@ app.post('/addCustomerAction', [
       }
 });
 
+// add Employee route -> loads the page used to add new Employees
 app.get('/addEmployee', (req, res) => {
     res.render('newEmployee');
 });
 
+// add Employee Action route -> adds the employee to the database table if proper information is provided.
 app.post('/addEmployeeAction', [
     check('fname').not().isEmpty().withMessage('Must have a First Name'), 
     check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
@@ -312,10 +330,12 @@ app.post('/addEmployeeAction', [
     }
 });
 
+// add product route -> loads the form for adding products to the database tables
 app.get('/addProduct', (req, res) => {
     res.render('newProduct');
 });
 
+// add Product Action route -> adds the product to the database table if proper inormation is provided.
 app.post('/addProductAction', [
     check('name').notEmpty().withMessage('Must have a Product Name'), 
     check('type').notEmpty().not().isNumeric().withMessage('Must have a Product Type that is not numeric'), 
@@ -338,6 +358,7 @@ app.post('/addProductAction', [
     }
 });
 
+// add Sale route loads the form used to add sales to the database.
 app.get('/addSale', (req, res) =>{
     console.log('Got body:', req.body);
     con.query('SELECT * FROM products', (err,rows) => {
@@ -355,7 +376,7 @@ app.get('/addSale', (req, res) =>{
     });
 });
 
-
+// adds Sales to the database if proper input is provided.
 app.post('/addSaleAction',[
     check('productID').notEmpty().isNumeric().withMessage('Must have a Product ID'), 
     check('CusID').notEmpty().isNumeric().withMessage('Must have a Customer ID'), 
@@ -387,6 +408,7 @@ app.post('/addSaleAction',[
     }
 });
 
+// add Steamer Order route -> loads the form used to add Glove Steaming orders to the glove_steaming table int the database.
 app.get('/addSteamerOrder', (req, res) => {
     con.query('Select Cus_ID from customers', (err,rows) =>{
         var customers = []
@@ -403,6 +425,7 @@ app.get('/addSteamerOrder', (req, res) => {
     })
 });
 
+// Add Steamer Order Action Route -> Adds the Glove steaming Order to the database if proper input is provided.
 app.post('/addSteamerOrderAction', [
     check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), 
     check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID')
@@ -423,6 +446,7 @@ app.post('/addSteamerOrderAction', [
     }
 });
 
+// Delete customer route -> deletes customer provided that a ID is selected on the Manage customer page.
 app.post('/deleteCustomer', (req, res) =>{
     console.log('Got body:', req.body);
     var str = "DELETE FROM `baseballstore`.`customers` WHERE (`Cus_ID` = '" + req.body.dropDown + "')";
@@ -431,6 +455,7 @@ app.post('/deleteCustomer', (req, res) =>{
     res.redirect('/ManageCustomers');
 });
 
+// Delete Employee Route -> Deletes employees provided that an ID is selected on the Manage Employee page.
 app.post('/deleteEmployee', (req, res) =>{
     console.log('Got body:', req.body);
     var str = "DELETE FROM `baseballstore`.`employees` WHERE (`Emp_ID` = '" + req.body.dropDown + "')";
@@ -439,6 +464,7 @@ app.post('/deleteEmployee', (req, res) =>{
     res.redirect('/ManageEmployees');
 });
 
+// Delete Product Route -> deletes a product providded that products ID is selected on the Manage Products page.
 app.post('/deleteProduct', (req, res) =>{
     console.log('Got body:', req.body);
     var str = "DELETE FROM `baseballstore`.`products` WHERE (`product_ID` = '" + req.body.dropDown + "')";
@@ -447,6 +473,7 @@ app.post('/deleteProduct', (req, res) =>{
     res.redirect('/ManageProducts');
 });
 
+// Delete Steamer Order Route -> deletes a Glove Steamer Order providded that glove_steaming ID is selected on the Manage Steamer Orders page.
 app.post('/deleteSteamerOrder', (req, res) =>{
     console.log('Got body:', req.body);
     var str = "DELETE FROM `baseballstore`.`glove_steaming` WHERE (`glove_steaming_ID` = '" + req.body.dropDown + "')";
@@ -455,6 +482,7 @@ app.post('/deleteSteamerOrder', (req, res) =>{
     res.redirect('/Manage_Steam_Orders');
 });
 
+// Delete Sale Route -> deletes a sale providded that Sales ID is selected on the Manage Sales page.
 app.post('/deleteSale', (req, res) =>{
     console.log('Got body:', req.body);
     var str = "DELETE FROM `baseballstore`.`sales` WHERE (`sales_ID` = '" + req.body.dropDown + "')";
@@ -463,6 +491,7 @@ app.post('/deleteSale', (req, res) =>{
     res.redirect('/ManageSales');
 });
 
+// Loads the Manage Customer Page
 app.get('/ManageCustomers', (req, res) => {
     con.query('SELECT * FROM customers', (err,rows) => {
         if(err) throw err;
@@ -474,6 +503,7 @@ app.get('/ManageCustomers', (req, res) => {
     });
 });
 
+// Loads the Manage Employees Page
 app.get('/ManageEmployees', (req, res) => {
     con.query('SELECT * FROM employees', (err,rows) => {
         if(err) throw err;
@@ -485,6 +515,7 @@ app.get('/ManageEmployees', (req, res) => {
     });
 });
 
+// Loads the Manage Products Page
 app.get('/ManageProducts', (req, res) => {
     con.query('SELECT * FROM products', (err,rows) => {
         if(err) throw err;
@@ -496,6 +527,7 @@ app.get('/ManageProducts', (req, res) => {
     });
 });
 
+// Loads the Manage Steamer orders Page.
 app.get('/Manage_Steam_Orders', (req, res) => {
     con.query('SELECT * FROM glove_steaming', (err,rows) => {
         if(err) throw err;
@@ -507,6 +539,7 @@ app.get('/Manage_Steam_Orders', (req, res) => {
     });
 });
 
+// Loads the Manage Sales Page.
 app.get('/ManageSales', (req, res) => {
     con.query('SELECT * FROM sales', (err,rows) => {
         if(err) throw err;
@@ -518,6 +551,7 @@ app.get('/ManageSales', (req, res) => {
     });
 })
 
+// Loads the Reports page.
 app.get('/Reports', (req, res) => {
     con.query('Select Cus_ID from customers', (err,rows) =>{
         var customers = []
@@ -540,6 +574,7 @@ app.get('/Reports', (req, res) => {
     })
 });
 
+// loads the update Customer form
 app.post('/updateCustomer', (req, res) => {
     console.log('Got body:', req.body);
     var str;
@@ -558,6 +593,7 @@ app.post('/updateCustomer', (req, res) => {
     });
 });
 
+// updates a customer when it is given proper input.
 app.post('/updateCustomerAction',[
     check('Fname').notEmpty().withMessage('Must have a First Name'), 
     check('Lname').notEmpty().withMessage('Must have a Last Name'), 
@@ -581,6 +617,7 @@ app.post('/updateCustomerAction',[
     }
 });
 
+// loads the form to update employees
 app.post('/updateEmployee', (req, res) => {
     console.log('Got body:', req.body);
     var str;
@@ -599,6 +636,7 @@ app.post('/updateEmployee', (req, res) => {
     });
 });
 
+// updates the employee in the database table given the form was filled out with good data, else redirect with correction statements.
 app.post('/updateEmployeeAction',[
     check('fname').not().isEmpty().withMessage('Must have a First Name'), 
     check('Lname').not().isEmpty().withMessage('Must have a Last Name'), 
@@ -622,6 +660,7 @@ app.post('/updateEmployeeAction',[
     }
 });
 
+// loads the form for updating products.
 app.post('/updateProduct', (req, res) => {
     console.log('Got body:', req.body);
     var str;
@@ -640,6 +679,7 @@ app.post('/updateProduct', (req, res) => {
     });
 });
 
+// updates the prodcut in the database table given the form was provided with the correct data.
 app.post('/updateProductAction', [
     check('name').notEmpty().withMessage('Must have a Product Name'),
     check('type').not().isEmpty().withMessage('Must have a Product Type'),
@@ -661,6 +701,7 @@ app.post('/updateProductAction', [
     }
 });
 
+// loads the form for updating steamer orders
 app.post('/updateSteamerOrder', (req, res) => {
     console.log('Got body:', req.body);
     var str;
@@ -679,6 +720,7 @@ app.post('/updateSteamerOrder', (req, res) => {
     });
 });
 
+// updates teh steamer order if proper data was provided to the form.
 app.post('/updateSteamerOrderAction', [
     check('CusID').notEmpty().isNumeric().withMessage('Must have a CustomerID'), 
     check('EmpID').notEmpty().isNumeric().withMessage('Must have an EmployeeID'), 
@@ -701,6 +743,8 @@ app.post('/updateSteamerOrderAction', [
 
 
 // Report Page functionality Begins here =============================================================================================
+
+// loads the Customers report.
 app.get('/viewCustomers', (req, res) =>{
     con.query('SELECT * FROM customers', (err,rows) => {
         if(err) throw err;
@@ -712,6 +756,7 @@ app.get('/viewCustomers', (req, res) =>{
     });
 });
 
+// loads the Employees report.
 app.get('/viewEmployees', (req, res) =>{
     con.query('SELECT * FROM employees', (err,rows) => {
         if(err) throw err;
@@ -723,6 +768,7 @@ app.get('/viewEmployees', (req, res) =>{
     });
 });
 
+// loads the Products report.
 app.get('/viewProducts', (req, res) =>{
     con.query('SELECT * FROM products', (err,rows) => {
         if(err) throw err;
@@ -734,6 +780,7 @@ app.get('/viewProducts', (req, res) =>{
     });
 });
 
+// loads the Sales report
 app.get('/viewSales', (req, res) =>{
     con.query('SELECT * FROM sales', (err,rows) => {
         if(err) throw err;
@@ -745,6 +792,7 @@ app.get('/viewSales', (req, res) =>{
     });
 });
 
+// loads the sales Report for a certain product.
 app.post('/viewSalesProduct', (req, res) =>{
     con.query('SELECT * FROM sales WHERE product_ID = ' + req.body.productID, (err,rows) => {
         if(err) throw err;
@@ -756,6 +804,7 @@ app.post('/viewSalesProduct', (req, res) =>{
     });
 });
 
+// loads the sales report for a certain Customer.
 app.post('/viewSalesCustomer', (req, res) =>{
     con.query('SELECT * FROM sales WHERE Cus_ID = ' + req.body.CusID, (err,rows) => {
         if(err) throw err;
@@ -767,7 +816,7 @@ app.post('/viewSalesCustomer', (req, res) =>{
     });
 });
 
-
+// Loads the Glove steamer order report.
 app.get('/viewSteamerOrders', (req, res) =>{
     con.query('SELECT * FROM glove_steaming', (err,rows) => {
         if(err) throw err;
@@ -779,6 +828,7 @@ app.get('/viewSteamerOrders', (req, res) =>{
     });
 });
 
+// Loads the Glove steamer order report for a certain employee.
 app.post('/viewGloveSteamingEmployee', (req, res) =>{
     con.query('SELECT * FROM glove_steaming WHERE employee_ID = ' + req.body.EmpID, (err,rows) => {
         if(err) throw err;
@@ -790,6 +840,7 @@ app.post('/viewGloveSteamingEmployee', (req, res) =>{
     });
 });
 
+// Loads the Glove Steaming Order for a certain Customer.
 app.post('/viewGloveSteamingCustomer', (req, res) =>{
     con.query('SELECT * FROM glove_steaming WHERE customer_ID = ' + req.body.CusID, (err,rows) => {
         if(err) throw err;
