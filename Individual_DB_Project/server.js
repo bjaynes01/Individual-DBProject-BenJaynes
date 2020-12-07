@@ -238,6 +238,13 @@ app.post('/addOrderAction',[
                 app.set('ID', req.body.ID);
                 console.log(str);
                 con.query(str);
+                console.log("stock", rows[0].stock)
+                console.log("Count", Number(req.body.Count))
+                var decrease = (rows[0].stock - Number(req.body.Count));
+                console.log("decrease", decrease)
+                var str = "UPDATE `baseballstore`.`products` SET `stock` = '"+ decrease +"' WHERE (`product_ID` = '"+ req.body.dropDown +"')";
+                console.log(str);
+                con.query(str);
                 res.redirect('/Customer');
             });
     }
@@ -400,7 +407,13 @@ app.post('/addSaleAction',[
                 console.log(rows[0].price)
                 console.log(req.body.Count)
                 str = "INSERT INTO `baseballstore`.`sales` (`Cus_ID`, `product_ID`, `amount`, `type`, `product_name`, `cost`) VALUES ('" + req.body.CusID + "', '" + req.body.productID + "', '" + req.body.Count + "', '" + rows[0].type + "', '" + rows[0].P_name + "', '" + cost + "')";
+                con.query(str);
                 app.set('ID', req.body.ID);
+                console.log("stock", rows[0].stock)
+                console.log("Count", Number(req.body.Count))
+                var decrease = (rows[0].stock - Number(req.body.Count));
+                console.log("decrease", decrease)
+                var str = "UPDATE `baseballstore`.`products` SET `stock` = '"+ decrease +"' WHERE (`product_ID` = '"+ req.body.productID +"')";
                 console.log(str);
                 con.query(str);
                 res.redirect('/ManageSales');
